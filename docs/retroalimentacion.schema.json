@@ -1,0 +1,2057 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Retroalimentación musical 3.0.0",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/retroalimentacion"
+    },
+    {
+      "$ref": "#/$defs/contexto_modelo"
+    }
+  ],
+  "$defs": {
+    "metricas": {
+      "type": "object",
+      "properties": {
+        "duracion_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "referencia_detectada_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "usuario_detectado_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "comparable_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "referencia_sin_deteccion_usuario_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "usuario_sin_referencia_detectada_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cobertura_comparable_pct": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "porcentaje_dentro_tolerancia": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "porcentaje_dentro_tolerancia_amplia": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "porcentaje_agudo": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "porcentaje_grave": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "porcentaje_desviacion_grande": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "puntos_comparados": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_mediano_firmado_cents": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "error_absoluto_medio_cents": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "error_absoluto_p90_cents": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "duracion_s",
+        "referencia_detectada_s",
+        "usuario_detectado_s",
+        "comparable_s",
+        "referencia_sin_deteccion_usuario_s",
+        "usuario_sin_referencia_detectada_s",
+        "cobertura_comparable_pct",
+        "porcentaje_dentro_tolerancia",
+        "porcentaje_dentro_tolerancia_amplia",
+        "porcentaje_agudo",
+        "porcentaje_grave",
+        "porcentaje_desviacion_grande",
+        "puntos_comparados",
+        "error_mediano_firmado_cents",
+        "error_absoluto_medio_cents",
+        "error_absoluto_p90_cents"
+      ],
+      "additionalProperties": false
+    },
+    "metodo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "comparacion_temporal_acotada"
+        },
+        "dtw": {
+          "const": false
+        },
+        "origen": {
+          "const": "pitch_final_archivos"
+        },
+        "latencia_estimada_s": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -2,
+          "maximum": 2
+        },
+        "denominador_afinacion": {
+          "type": "string"
+        },
+        "denominador_cobertura": {
+          "type": "string"
+        },
+        "configuracion": {
+          "type": "object",
+          "properties": {
+            "paso_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "tolerancia_temporal_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "fragmento_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "minimo_referencia_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "minimo_comparable_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "cobertura_minima": {
+              "type": "number",
+              "minimum": 0
+            },
+            "cobertura_suficiente": {
+              "type": "number",
+              "minimum": 0
+            },
+            "tolerancia_afinacion_cents": {
+              "type": "number",
+              "minimum": 0
+            },
+            "tolerancia_amplia_cents": {
+              "type": "number",
+              "minimum": 0
+            },
+            "proporcion_cercana": {
+              "type": "number",
+              "minimum": 0
+            },
+            "proporcion_direccion": {
+              "type": "number",
+              "minimum": 0
+            },
+            "proporcion_desviacion_grande": {
+              "type": "number",
+              "minimum": 0
+            },
+            "proporcion_cercana_amplia": {
+              "type": "number",
+              "minimum": 0
+            },
+            "desviacion_grande_cents": {
+              "type": "number",
+              "minimum": 0
+            },
+            "duracion_maxima_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "minimo_evento_s": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "paso_s",
+            "tolerancia_temporal_s",
+            "fragmento_s",
+            "minimo_referencia_s",
+            "minimo_comparable_s",
+            "cobertura_minima",
+            "cobertura_suficiente",
+            "tolerancia_afinacion_cents",
+            "tolerancia_amplia_cents",
+            "proporcion_cercana",
+            "proporcion_direccion",
+            "proporcion_desviacion_grande",
+            "proporcion_cercana_amplia",
+            "desviacion_grande_cents",
+            "duracion_maxima_s",
+            "minimo_evento_s"
+          ],
+          "additionalProperties": false
+        },
+        "umbrales_hallazgos": {
+          "type": "string"
+        },
+        "sincronizacion": {
+          "enum": [
+            "no_verificada",
+            "ajuste_manual",
+            "ajuste_automatico",
+            "automatico_no_concluyente",
+            "desactivada"
+          ]
+        },
+        "compensacion_temporal_s": {
+          "type": "number",
+          "minimum": -2,
+          "maximum": 2
+        },
+        "extremos_no_capturados_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "alineacion": {
+          "type": "object"
+        },
+        "segmentacion": {
+          "type": "object",
+          "properties": {
+            "tipo": {
+              "enum": [
+                "pausas_referencia",
+                "ventanas_fijas_respaldo"
+              ]
+            },
+            "configuracion": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {},
+                  "required": [],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "nivel_db": {
+                      "type": "number"
+                    },
+                    "paso_s": {
+                      "type": "number"
+                    },
+                    "pausa_s": {
+                      "type": "number"
+                    },
+                    "pausa_interna_s": {
+                      "type": "number"
+                    },
+                    "limite_objetivo_s": {
+                      "type": "number"
+                    },
+                    "minimo_hijo_s": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "nivel_db",
+                    "paso_s",
+                    "pausa_s",
+                    "pausa_interna_s",
+                    "limite_objetivo_s",
+                    "minimo_hijo_s"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "duracion_grabacion_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "duracion_fuera_fragmentos_s": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "tipo",
+            "configuracion",
+            "duracion_grabacion_s",
+            "duracion_fuera_fragmentos_s"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "dtw",
+        "origen",
+        "latencia_estimada_s",
+        "denominador_afinacion",
+        "denominador_cobertura",
+        "configuracion",
+        "umbrales_hallazgos",
+        "sincronizacion",
+        "compensacion_temporal_s",
+        "extremos_no_capturados_s",
+        "alineacion",
+        "segmentacion"
+      ],
+      "additionalProperties": false
+    },
+    "calidad": {
+      "type": "object",
+      "properties": {
+        "suficiencia_evidencia": {
+          "enum": [
+            "referencia_insuficiente",
+            "deteccion_insuficiente",
+            "parcial",
+            "suficiente"
+          ]
+        },
+        "entrada_referencia": {
+          "type": "object",
+          "properties": {
+            "puntos_descartados": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "tiempos_duplicados": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "puntos_descartados",
+            "tiempos_duplicados"
+          ],
+          "additionalProperties": false
+        },
+        "entrada_usuario": {
+          "type": "object",
+          "properties": {
+            "puntos_descartados": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "tiempos_duplicados": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "puntos_descartados",
+            "tiempos_duplicados"
+          ],
+          "additionalProperties": false
+        },
+        "limitaciones": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "suficiencia_evidencia",
+        "entrada_referencia",
+        "entrada_usuario",
+        "limitaciones"
+      ],
+      "additionalProperties": false
+    },
+    "fragmento": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^f[0-9]{4,}$"
+        },
+        "inicio_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fin_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "metricas": {
+          "$ref": "#/$defs/metricas"
+        },
+        "suficiencia_evidencia": {
+          "enum": [
+            "referencia_insuficiente",
+            "deteccion_insuficiente",
+            "parcial",
+            "suficiente"
+          ]
+        },
+        "eventos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evento"
+          }
+        },
+        "musical": {
+          "type": "object",
+          "properties": {
+            "metricas": {
+              "type": "object",
+              "properties": {
+                "notas_referencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_comparadas": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_sin_correspondencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cobertura_notas_pct": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_50": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_100": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "error_mediano_cents": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diferencia_inicio_mediana_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "notas_referencia",
+                "notas_comparadas",
+                "notas_sin_correspondencia",
+                "cobertura_notas_pct",
+                "porcentaje_50",
+                "porcentaje_100",
+                "error_mediano_cents",
+                "diferencia_inicio_mediana_ms"
+              ],
+              "additionalProperties": false
+            },
+            "notas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  },
+                  "referencia": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "inicio_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "fin_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "midi": {
+                        "type": "number"
+                      },
+                      "dispersion_cents": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "nucleo_s": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "inicio_s",
+                      "fin_s",
+                      "midi",
+                      "dispersion_cents",
+                      "nucleo_s"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "usuario": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "inicio_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "fin_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "midi": {
+                            "type": "number"
+                          },
+                          "dispersion_cents": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "nucleo_s": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "inicio_s",
+                          "fin_s",
+                          "midi",
+                          "dispersion_cents",
+                          "nucleo_s"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "error_cents": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_inicio_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_duracion_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "clase": {
+                    "enum": [
+                      "sin_correspondencia",
+                      "cerca",
+                      "margen",
+                      "fuera"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fragmento_id",
+                  "referencia",
+                  "usuario",
+                  "error_cents",
+                  "diferencia_inicio_ms",
+                  "diferencia_duracion_ms",
+                  "clase"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "usuario_sin_correspondencia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "inicio_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fin_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "midi": {
+                    "type": "number"
+                  },
+                  "dispersion_cents": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "nucleo_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "inicio_s",
+                  "fin_s",
+                  "midi",
+                  "dispersion_cents",
+                  "nucleo_s",
+                  "fragmento_id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "metricas",
+            "notas",
+            "usuario_sin_correspondencia"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "inicio_s",
+        "fin_s",
+        "metricas",
+        "suficiencia_evidencia",
+        "eventos"
+      ],
+      "additionalProperties": false
+    },
+    "hallazgo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^h_f[0-9]{4,}$"
+        },
+        "tipo": {
+          "enum": [
+            "referencia_insuficiente",
+            "deteccion_insuficiente",
+            "discrepancia_grande",
+            "cobertura_parcial",
+            "afinacion_cercana",
+            "tendencia_aguda",
+            "tendencia_grave",
+            "desviaciones_frecuentes"
+          ]
+        },
+        "categoria": {
+          "enum": [
+            "limitacion",
+            "fortaleza",
+            "aspecto_por_mejorar"
+          ]
+        },
+        "fragmento_id": {
+          "type": "string",
+          "pattern": "^f[0-9]{4,}$"
+        },
+        "inicio_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fin_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "suficiencia_evidencia": {
+          "enum": [
+            "referencia_insuficiente",
+            "deteccion_insuficiente",
+            "parcial",
+            "suficiente"
+          ]
+        },
+        "evidencia": {
+          "type": "object",
+          "properties": {
+            "referencia_detectada_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "comparable_s": {
+              "type": "number",
+              "minimum": 0
+            },
+            "cobertura_comparable_pct": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "error_mediano_firmado_cents": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "error_absoluto_medio_cents": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "porcentaje_dentro_tolerancia": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "porcentaje_dentro_tolerancia_amplia": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "porcentaje_agudo": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "porcentaje_grave": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "porcentaje_desviacion_grande": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "required": [
+            "referencia_detectada_s",
+            "comparable_s",
+            "cobertura_comparable_pct",
+            "error_mediano_firmado_cents",
+            "error_absoluto_medio_cents",
+            "porcentaje_dentro_tolerancia",
+            "porcentaje_dentro_tolerancia_amplia",
+            "porcentaje_agudo",
+            "porcentaje_grave",
+            "porcentaje_desviacion_grande"
+          ],
+          "additionalProperties": false
+        },
+        "accion_sugerida": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "enum": [
+                    "escuchar_y_repetir",
+                    "comparar_altura",
+                    "revisar_deteccion",
+                    "revisar_referencia",
+                    "comprobar_correspondencia"
+                  ]
+                },
+                "descripcion": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "descripcion"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tipo",
+        "categoria",
+        "fragmento_id",
+        "inicio_s",
+        "fin_s",
+        "suficiencia_evidencia",
+        "evidencia",
+        "accion_sugerida"
+      ],
+      "additionalProperties": false
+    },
+    "seleccion": {
+      "type": "object",
+      "properties": {
+        "fortalezas": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^h_f[0-9]{4,}$"
+          },
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "aspectos_por_mejorar": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^h_f[0-9]{4,}$"
+          },
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "limitaciones": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^h_f[0-9]{4,}$"
+          },
+          "maxItems": 3,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "fortalezas",
+        "aspectos_por_mejorar",
+        "limitaciones"
+      ],
+      "additionalProperties": false
+    },
+    "evento": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^e_f[0-9]{4,}_[0-9]{4,}$"
+        },
+        "tipo": {
+          "enum": [
+            "afinacion_cercana",
+            "desviacion_aguda",
+            "desviacion_grave",
+            "discrepancia_grande",
+            "sin_referencia",
+            "sin_deteccion_usuario"
+          ]
+        },
+        "categoria": {
+          "enum": [
+            "fortaleza",
+            "aspecto_por_mejorar",
+            "limitacion"
+          ]
+        },
+        "inicio_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fin_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "metricas": {
+          "$ref": "#/$defs/metricas"
+        },
+        "accion_sugerida": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "enum": [
+                    "escuchar_y_repetir",
+                    "comparar_altura",
+                    "revisar_deteccion",
+                    "revisar_referencia",
+                    "comprobar_correspondencia"
+                  ]
+                },
+                "descripcion": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "descripcion"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "tipo",
+        "categoria",
+        "inicio_s",
+        "fin_s",
+        "metricas",
+        "accion_sugerida"
+      ],
+      "additionalProperties": false
+    },
+    "fragmento_contexto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^f[0-9]{4,}$"
+        },
+        "inicio_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "fin_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "metricas": {
+          "$ref": "#/$defs/metricas"
+        },
+        "suficiencia_evidencia": {
+          "enum": [
+            "referencia_insuficiente",
+            "deteccion_insuficiente",
+            "parcial",
+            "suficiente"
+          ]
+        },
+        "eventos_seleccionados": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evento"
+          },
+          "maxItems": 9
+        },
+        "eventos_no_incluidos": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "musical": {
+          "type": "object",
+          "properties": {
+            "metricas": {
+              "type": "object",
+              "properties": {
+                "notas_referencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_comparadas": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_sin_correspondencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cobertura_notas_pct": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_50": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_100": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "error_mediano_cents": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diferencia_inicio_mediana_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "notas_referencia",
+                "notas_comparadas",
+                "notas_sin_correspondencia",
+                "cobertura_notas_pct",
+                "porcentaje_50",
+                "porcentaje_100",
+                "error_mediano_cents",
+                "diferencia_inicio_mediana_ms"
+              ],
+              "additionalProperties": false
+            },
+            "notas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  },
+                  "referencia": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "inicio_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "fin_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "midi": {
+                        "type": "number"
+                      },
+                      "dispersion_cents": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "nucleo_s": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "inicio_s",
+                      "fin_s",
+                      "midi",
+                      "dispersion_cents",
+                      "nucleo_s"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "usuario": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "inicio_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "fin_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "midi": {
+                            "type": "number"
+                          },
+                          "dispersion_cents": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "nucleo_s": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "inicio_s",
+                          "fin_s",
+                          "midi",
+                          "dispersion_cents",
+                          "nucleo_s"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "error_cents": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_inicio_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_duracion_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "clase": {
+                    "enum": [
+                      "sin_correspondencia",
+                      "cerca",
+                      "margen",
+                      "fuera"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fragmento_id",
+                  "referencia",
+                  "usuario",
+                  "error_cents",
+                  "diferencia_inicio_ms",
+                  "diferencia_duracion_ms",
+                  "clase"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "usuario_sin_correspondencia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "inicio_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fin_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "midi": {
+                    "type": "number"
+                  },
+                  "dispersion_cents": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "nucleo_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "inicio_s",
+                  "fin_s",
+                  "midi",
+                  "dispersion_cents",
+                  "nucleo_s",
+                  "fragmento_id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "metricas",
+            "notas",
+            "usuario_sin_correspondencia"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "inicio_s",
+        "fin_s",
+        "metricas",
+        "suficiencia_evidencia",
+        "eventos_seleccionados",
+        "eventos_no_incluidos"
+      ],
+      "additionalProperties": false
+    },
+    "retroalimentacion": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "3.0.0"
+        },
+        "metodo": {
+          "$ref": "#/$defs/metodo"
+        },
+        "calidad": {
+          "$ref": "#/$defs/calidad"
+        },
+        "resumen_metricas": {
+          "$ref": "#/$defs/metricas"
+        },
+        "seleccion": {
+          "$ref": "#/$defs/seleccion"
+        },
+        "fragmentos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fragmento"
+          }
+        },
+        "hallazgos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hallazgo"
+          }
+        },
+        "musical": {
+          "type": "object",
+          "properties": {
+            "metricas": {
+              "type": "object",
+              "properties": {
+                "notas_referencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_comparadas": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_sin_correspondencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cobertura_notas_pct": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_50": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_100": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "error_mediano_cents": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diferencia_inicio_mediana_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "notas_referencia",
+                "notas_comparadas",
+                "notas_sin_correspondencia",
+                "cobertura_notas_pct",
+                "porcentaje_50",
+                "porcentaje_100",
+                "error_mediano_cents",
+                "diferencia_inicio_mediana_ms"
+              ],
+              "additionalProperties": false
+            },
+            "notas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  },
+                  "referencia": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "inicio_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "fin_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "midi": {
+                        "type": "number"
+                      },
+                      "dispersion_cents": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "nucleo_s": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "inicio_s",
+                      "fin_s",
+                      "midi",
+                      "dispersion_cents",
+                      "nucleo_s"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "usuario": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "inicio_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "fin_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "midi": {
+                            "type": "number"
+                          },
+                          "dispersion_cents": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "nucleo_s": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "inicio_s",
+                          "fin_s",
+                          "midi",
+                          "dispersion_cents",
+                          "nucleo_s"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "error_cents": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_inicio_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_duracion_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "clase": {
+                    "enum": [
+                      "sin_correspondencia",
+                      "cerca",
+                      "margen",
+                      "fuera"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fragmento_id",
+                  "referencia",
+                  "usuario",
+                  "error_cents",
+                  "diferencia_inicio_ms",
+                  "diferencia_duracion_ms",
+                  "clase"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "usuario_sin_correspondencia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "inicio_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fin_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "midi": {
+                    "type": "number"
+                  },
+                  "dispersion_cents": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "nucleo_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "inicio_s",
+                  "fin_s",
+                  "midi",
+                  "dispersion_cents",
+                  "nucleo_s",
+                  "fragmento_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "version": {
+              "const": "1.0.0"
+            },
+            "parametros": {
+              "type": "object",
+              "properties": {
+                "paso_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "mediana_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cambio_semitonos": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "persistencia_cambio_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "minimo_nota_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "recorte_borde_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "dispersion_maxima_cents": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maximo_diferencia_inicio_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "solapamiento_minimo": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "paso_s",
+                "mediana_s",
+                "cambio_semitonos",
+                "persistencia_cambio_s",
+                "minimo_nota_s",
+                "recorte_borde_s",
+                "dispersion_maxima_cents",
+                "maximo_diferencia_inicio_s",
+                "solapamiento_minimo"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "metricas",
+            "notas",
+            "usuario_sin_correspondencia",
+            "version",
+            "parametros"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "metodo",
+        "calidad",
+        "resumen_metricas",
+        "seleccion",
+        "fragmentos",
+        "hallazgos"
+      ],
+      "additionalProperties": false
+    },
+    "contexto_modelo": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": "3.0.0"
+        },
+        "metodo": {
+          "$ref": "#/$defs/metodo"
+        },
+        "calidad": {
+          "$ref": "#/$defs/calidad"
+        },
+        "resumen_metricas": {
+          "$ref": "#/$defs/metricas"
+        },
+        "seleccion": {
+          "$ref": "#/$defs/seleccion"
+        },
+        "idioma": {
+          "const": "es"
+        },
+        "hallazgos_seleccionados": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hallazgo"
+          },
+          "maxItems": 8
+        },
+        "hallazgos_totales": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hallazgos_no_incluidos": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "analisis_fragmentos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fragmento_contexto"
+          }
+        },
+        "instrucciones_redaccion": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "salida_esperada": {
+          "type": "object",
+          "properties": {
+            "resumen": {
+              "type": "string"
+            },
+            "fortalezas": {
+              "type": "string"
+            },
+            "aspectos_por_mejorar": {
+              "type": "string"
+            },
+            "practica_sugerida": {
+              "type": "string"
+            },
+            "alcance_analisis": {
+              "type": "string"
+            },
+            "por_fragmento": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "resumen",
+            "fortalezas",
+            "aspectos_por_mejorar",
+            "practica_sugerida",
+            "alcance_analisis",
+            "por_fragmento"
+          ],
+          "additionalProperties": false
+        },
+        "musical": {
+          "type": "object",
+          "properties": {
+            "metricas": {
+              "type": "object",
+              "properties": {
+                "notas_referencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_comparadas": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "notas_sin_correspondencia": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cobertura_notas_pct": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_50": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "porcentaje_100": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "error_mediano_cents": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "diferencia_inicio_mediana_ms": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "notas_referencia",
+                "notas_comparadas",
+                "notas_sin_correspondencia",
+                "cobertura_notas_pct",
+                "porcentaje_50",
+                "porcentaje_100",
+                "error_mediano_cents",
+                "diferencia_inicio_mediana_ms"
+              ],
+              "additionalProperties": false
+            },
+            "notas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  },
+                  "referencia": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "inicio_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "fin_s": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "midi": {
+                        "type": "number"
+                      },
+                      "dispersion_cents": {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      "nucleo_s": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "inicio_s",
+                      "fin_s",
+                      "midi",
+                      "dispersion_cents",
+                      "nucleo_s"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "usuario": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "inicio_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "fin_s": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "midi": {
+                            "type": "number"
+                          },
+                          "dispersion_cents": {
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "nucleo_s": {
+                            "type": "number",
+                            "minimum": 0
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "inicio_s",
+                          "fin_s",
+                          "midi",
+                          "dispersion_cents",
+                          "nucleo_s"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "error_cents": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_inicio_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "diferencia_duracion_ms": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "clase": {
+                    "enum": [
+                      "sin_correspondencia",
+                      "cerca",
+                      "margen",
+                      "fuera"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fragmento_id",
+                  "referencia",
+                  "usuario",
+                  "error_cents",
+                  "diferencia_inicio_ms",
+                  "diferencia_duracion_ms",
+                  "clase"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "usuario_sin_correspondencia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "inicio_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fin_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "midi": {
+                    "type": "number"
+                  },
+                  "dispersion_cents": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "nucleo_s": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "fragmento_id": {
+                    "type": "string",
+                    "pattern": "^f[0-9]{4,}$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "inicio_s",
+                  "fin_s",
+                  "midi",
+                  "dispersion_cents",
+                  "nucleo_s",
+                  "fragmento_id"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "version": {
+              "const": "1.0.0"
+            },
+            "parametros": {
+              "type": "object",
+              "properties": {
+                "paso_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "mediana_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cambio_semitonos": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "persistencia_cambio_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "minimo_nota_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "recorte_borde_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "dispersion_maxima_cents": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maximo_diferencia_inicio_s": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "solapamiento_minimo": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "paso_s",
+                "mediana_s",
+                "cambio_semitonos",
+                "persistencia_cambio_s",
+                "minimo_nota_s",
+                "recorte_borde_s",
+                "dispersion_maxima_cents",
+                "maximo_diferencia_inicio_s",
+                "solapamiento_minimo"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "metricas",
+            "notas",
+            "usuario_sin_correspondencia",
+            "version",
+            "parametros"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "metodo",
+        "calidad",
+        "resumen_metricas",
+        "seleccion",
+        "idioma",
+        "hallazgos_seleccionados",
+        "hallazgos_totales",
+        "hallazgos_no_incluidos",
+        "analisis_fragmentos",
+        "instrucciones_redaccion",
+        "salida_esperada"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

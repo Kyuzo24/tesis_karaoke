@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karaoke Studio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="feedback.css">
+  <link rel="stylesheet" href="lyrics.css">
+  <link rel="stylesheet" href="review.css">
+  <link rel="stylesheet" href="tutorial.css">
+</head>
+<body data-view="library">
+  <main class="app-shell">
+    <aside class="side-nav">
+      <div class="brand">
+        <div class="brand-mark">K</div>
+        <div>
+          <div class="brand-title">Karaoke Studio</div>
+          <div class="brand-subtitle">Afinacion en tiempo real</div>
+        </div>
+      </div>
+
+      <nav class="app-nav" aria-label="Vistas principales">
+        <button class="nav-item is-active" type="button" data-view-target="library">Biblioteca</button>
+        <button class="nav-item" type="button" data-view-target="practice">Practicar</button>
+        <button class="nav-item" type="button" data-view-target="result">Resultado</button>
+        <button class="nav-item" type="button" data-view-target="history">Historial</button>
+        <button class="nav-item" type="button" data-view-target="diagnostics">Diagnostico</button>
+        <button class="nav-item" type="button" data-view-target="settings">Ajustes</button>
+        <button class="nav-item" type="button" data-view-target="guide">Guía de uso</button>
+      </nav>
+
+      <section class="now-card">
+        <div class="section-label">Cancion actual</div>
+        <strong id="selectedSongMini">Sin canciones</strong>
+        <span id="selectedSongMiniMeta">Catalogo vacio</span>
+      </section>
+
+      <div class="status-strip">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusLabel">Listo</span>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow" id="artistLabel">Catalogo</div>
+          <h1 id="songTitle">Karaoke Studio</h1>
+        </div>
+      </header>
+
+      <section class="view-panel" data-view-panel="guide" aria-label="Guía de uso">
+        <div class="guide-toolbar">
+          <button class="button button-primary" type="button" id="guideLibrary">Ir a la biblioteca</button>
+          <button class="button" type="button" id="repeatTutorial">Ver tutorial interactivo</button>
+          <label><input id="hideGuide" type="checkbox" disabled> No volver a mostrar al iniciar</label>
+          <small role="status" id="guideNotice"></small>
+        </div>
+        <iframe id="guideFrame" title="Manual de Karaoke Studio por apartados" src="../Guia de Karaoke Studio.html"></iframe>
+      </section>
+      <section class="view-panel is-active" data-view-panel="library">
+        <div id="collectionHeading" hidden><button class="button" id="collectionBack" type="button" aria-label="Volver a colecciones">‹</button><h2 id="collectionTitle"></h2></div>
+        <div class="section-head">
+          <div>
+            <div class="section-label">Biblioteca</div>
+            <h2>Canciones</h2>
+          </div>
+</div>
+        <div class="library-layout">
+          <section class="song-browser">
+            <div class="library-toolbar">
+              <button class="button" id="libraryAll" type="button">Canciones</button>
+              <button class="button" id="libraryFolders" type="button">Colecciones</button>
+              <label>Ordenar <select id="librarySort"><option value="alpha">Título A–Z</option><option value="added">Añadidas recientemente</option><option value="last">Últimas cantadas</option><option value="count">Más cantadas</option></select></label>
+            </div>
+            <div id="collectionToolbar" hidden><button class="button" id="collectionCreate" type="button">Nueva colección</button><p id="collectionHint"></p></div>
+            <div id="collectionGrid"></div>
+            <p id="libraryNotice" role="status"></p>
+            <button class="song-card song-add-card" id="addButton" type="button" aria-label="Agregar canción"><span aria-hidden="true">+</span><span>Agregar canción</span></button>
+            <div class="song-list" id="songList"></div>
+          </section>
+          <aside class="song-detail">
+            <div class="section-label">Seleccion</div>
+            <h3 id="librarySongTitle">Sin cancion seleccionada</h3>
+            <p id="librarySongMeta">Agrega una cancion para comenzar.</p>
+            <button class="button button-primary button-large" id="libraryPracticeButton" type="button" disabled>Practicar</button>
+            <button class="button button-large" id="libraryLyricsButton" type="button" disabled>Configurar letra</button>
+            <button class="button button-large" id="songCollections" type="button">Organizar en colecciones</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view-panel" data-view-panel="practice">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Practicar</div>
+            <h2>Referencia y voz en vivo</h2>
+          </div>
+        </div>
+        <div id="practiceChartMount"></div>
+      </section>
+
+      <section class="view-panel" data-view-panel="result">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Resultado</div>
+            <h2>Toma seleccionada</h2>
+          </div>
+        </div>
+        <p class="feedback-note">Revisa qué te salió bien y qué puedes practicar. El análisis solo incluye las partes que pudimos comparar; no es una nota final de tu interpretación.</p>
+        <section class="metrics-grid">
+          <article class="metric-tile">
+            <span>Notas muy cercanas</span>
+            <strong id="metricTight">--</strong>
+            <p id="metricTightNote">--</p>
+          </article>
+          <article class="metric-tile">
+            <span>Notas cercanas</span>
+            <strong id="metricLoose">--</strong>
+            <p id="metricLooseNote">--</p>
+          </article>
+          <article class="metric-tile">
+            <span>Cuánto pudimos revisar</span>
+            <strong id="metricTrend">--</strong>
+            <p id="metricTrendNote">--</p>
+          </article>
+          <article class="metric-tile">
+            <span>Notas revisadas</span>
+            <strong id="metricPoints">--</strong>
+            <p id="metricPointsNote">--</p>
+          </article>
+        </section>
+        <div class="result-layout">
+          <div id="resultChartMount"></div>
+          <div id="resultPlayerMount"></div>
+        </div>
+        <div id="resultFeedbackMount"></div>
+      </section>
+
+      <section class="view-panel" data-view-panel="history">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Historial</div>
+            <h2>Tomas guardadas</h2>
+          </div>
+        </div>
+        <div class="history-layout">
+          <section class="takes-panel">
+            <div class="take-list" id="takeList"></div>
+          </section>
+          <section class="history-detail">
+            <div id="historyChartMount"></div>
+            <div id="historyPlayerMount"></div>
+            <div id="historyFeedbackMount"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view-panel" data-view-panel="diagnostics">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Diagnostico</div>
+            <h2>Lectura de referencia</h2>
+          </div>
+          <button class="button" id="referenceDiagnosticButton" type="button">Analizar referencia</button>
+        </div>
+        <section class="diagnostic-layout">
+          <article class="diagnostic-card">
+            <div class="section-label">Capas</div>
+            <div class="diagnostic-metrics">
+              <div>
+                <span>Crudo</span>
+                <strong id="diagnosticRawCount">--</strong>
+              </div>
+              <div>
+                <span>Filtrado</span>
+                <strong id="diagnosticFilteredCount">--</strong>
+              </div>
+              <div>
+                <span>Corregido</span>
+                <strong id="diagnosticCorrectedCount">--</strong>
+              </div>
+              <div>
+                <span>Octavas</span>
+                <strong id="diagnosticOctaveCount">--</strong>
+              </div>
+            </div>
+            <p id="diagnosticStatus">Analiza la referencia para revisar que notas se pierden o se corrigen.</p>
+          </article>
+          <article class="diagnostic-chart-card">
+            <div class="diagnostic-legend">
+              <span><i class="swatch raw"></i> Crudo</span>
+              <span><i class="swatch filtered"></i> Filtrado</span>
+              <span><i class="swatch corrected"></i> Corregido</span>
+            </div>
+            <svg id="diagnosticChart" class="diagnostic-chart" viewBox="0 0 1200 420" role="img" aria-label="Diagnostico de lectura de referencia">
+              <g id="diagnosticGridLayer"></g>
+              <path id="diagnosticRawPath" class="diagnostic-raw"></path>
+              <path id="diagnosticFilteredPath" class="diagnostic-filtered"></path>
+              <path id="diagnosticCorrectedPath" class="diagnostic-corrected"></path>
+            </svg>
+            <div class="diagnostic-empty" id="diagnosticEmpty">Sin diagnostico cargado</div>
+          </article>
+        </section>
+      </section>
+
+      <section class="view-panel" data-view-panel="settings">
+        <div class="section-head">
+          <div>
+            <div class="section-label">Ajustes</div>
+            <h2>Audio y deteccion</h2>
+          </div>
+        </div>
+        <section class="settings-grid">
+          <article class="session-card feedback-settings">
+            <div class="section-label">Explicación de resultados</div>
+            <h3>Retroalimentación local</h3>
+            <p>Las explicaciones se construyen con las métricas y los eventos de tu interpretación. Funcionan sin cuentas, conexión ni descargas de modelos de lenguaje.</p>
+            <p>La sincronización se compensa automáticamente cuando hay evidencia suficiente. Puedes modificarla o desactivarla en el análisis de cada toma.</p>
+            <p>Las recomendaciones describen afinación y detección; no evalúan técnica vocal ni ritmo.</p>
+          </article>
+          <article class="session-card">
+            <div class="section-label">Dispositivos</div>
+            <label class="setting-row"><span>Micrófono</span><select id="audioInput" aria-label="Micrófono"></select></label>
+            <label class="setting-row"><span>Salida al cantar</span><select id="audioOutput" aria-label="Salida al cantar"></select></label>
+            <p id="audioDeviceStatus" role="status" class="feedback-note"></p>
+            <span id="inputDeviceLabel" hidden></span><span id="outputDeviceLabel" hidden></span>
+          </article>
+          <article class="session-card">
+            <div class="section-label">Diagnostico</div>
+            <div class="session-row">
+              <span>Ruido</span>
+              <strong id="noiseLabel">--</strong>
+            </div>
+            <div class="session-row">
+              <span>Descartes</span>
+              <strong id="rejectLabel">--</strong>
+            </div>
+          </article>
+          <article class="session-card">
+            <div class="section-label">Grafico</div>
+            <label class="setting-row" for="notationSelect">
+              <span>Notacion de notas</span>
+              <select id="notationSelect">
+                <option value="es" selected>Do, Re, Mi (latina)</option>
+                <option value="en">C, D, E (anglosajona)</option>
+              </select>
+            </label>
+          </article>
+          <article class="session-card">
+            <div class="section-label">Apariencia</div>
+            <div class="session-row">
+              <span>Tema</span>
+              <button class="button theme-toggle" id="themeToggleButton" type="button">Tema oscuro</button>
+            </div>
+          </article>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <section id="preparationProgress" class="preparation-progress hidden" role="status" aria-live="polite">
+    <strong id="preparationMessage">Preparando canción…</strong>
+    <progress aria-label="Preparación de la canción"></progress>
+    <span id="preparationElapsed">La separación puede tardar varios minutos.</span>
+  </section>
+  <div class="module-dock" id="moduleDock">
+    <section class="live-panel" id="chartModule">
+      <section id="lyricsPanel" aria-label="Letra sincronizada">
+        <div class="lyrics-heading"><strong>LETRA SINCRONIZADA</strong><div class="lyrics-actions"><label><input id="lyricsVisible" type="checkbox" checked> Mostrar</label><button class="button button-small" id="lyricsConfigure" type="button">Configurar letra</button></div></div>
+        <div id="lyricsDisplay"><p id="lyricsCurrent">Añade una letra sincronizada para cantar.</p><p id="lyricsNext"></p></div>
+        <dialog id="lyricsSettings" aria-labelledby="lyricsDialogTitle"><div class="lyrics-dialog-head"><h2 id="lyricsDialogTitle">Configurar letra</h2><button class="button" id="lyricsClose" type="button" aria-label="Cerrar configuración de letra">Cerrar</button></div>
+          <p>Busca una versión que coincida con tu audio o importa un archivo LRC. Se guarda para usarla sin conexión.</p>
+          <label>Título <input id="lyricsTitle" type="text"></label>
+          <label>Artista <input id="lyricsArtist" type="text"></label>
+          <button id="lyricsSearch" type="button">Buscar en LRCLIB</button>
+          <label>Importar .lrc <input id="lyricsFile" type="file" accept=".lrc,text/plain"></label>
+          <p id="lyricsStatus" role="status"></p><div id="lyricsResults"></div>
+          <label>Ajuste de la letra (ms) <input id="lyricsOffset" type="number" min="-30000" max="30000" step="100" value="0"></label>
+          <button id="lyricsSaveOffset" type="button">Guardar ajuste</button>
+          <p>Un valor positivo retrasa la letra; uno negativo la adelanta. No modifica la evaluación de tu voz.</p>
+          <small id="lyricsSource"></small>
+        </dialog>
+      </section>
+      <div class="live-header">
+        <div class="timer">
+          <span id="currentTime">0:00</span>
+          <span>/</span>
+          <span id="durationTime">3:12</span>
+        </div>
+        <div class="live-stats">
+          <div class="current-note">
+            <span>Tu nota</span>
+            <strong id="currentNote">--</strong>
+          </div>
+          <div class="performance-summary">
+            <span>Tendencia de tu voz</span>
+            <strong id="averageError">--</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-shell" id="chartShell">
+        <div class="note-ruler" id="noteRuler"></div>
+        <svg id="pitchChart" viewBox="0 0 1200 520" preserveAspectRatio="none" role="img" aria-label="Grafico de notas esperadas y obtenidas">
+          <g id="gridLayer"></g>
+          <g id="referenceBlockLayer"></g>
+          <path id="referencePath" class="reference-line"></path>
+          <g id="userBlockLayer"></g>
+          <g id="userSegmentLayer"></g>
+          <path id="userPath" class="user-line"></path>
+          <line id="cursorLine" class="cursor-line" x1="0" x2="0" y1="0" y2="520"></line>
+        </svg>
+        <div class="chart-legend">
+          <span><i class="swatch reference"></i> Referencia</span>
+          <span><i class="swatch good"></i> Afinado</span>
+          <span><i class="swatch near"></i> Cerca</span>
+          <span><i class="swatch far"></i> Fuera</span>
+          <span><i class="swatch unknown"></i> Sin pareja</span>
+        </div>
+        <input id="detailX" class="detail-scroll detail-scroll-x" type="range" min="0" max="100" value="0">
+        <input id="detailY" class="detail-scroll detail-scroll-y" type="range" min="0" max="100" value="45">
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-track">
+          <div class="timeline-fill" id="timelineFill"></div>
+        </div>
+      </div>
+
+      <div class="alignment-row">
+        <span>Ajustar tiempo</span>
+        <input id="visualOffset" type="range" min="-700" max="700" step="10" value="0">
+        <strong id="visualOffsetLabel">0 ms</strong>
+        <button class="button button-small" id="visualAutoAlignButton" type="button">Auto</button>
+        <button class="button button-small" id="visualOffsetResetButton" type="button">0</button>
+        <span class="feedback-note" id="visualAlignmentHint">Alineación compartida con el análisis de la toma.</span>
+      </div>
+
+      <div class="control-row">
+        <button class="button chart-notation-toggle" id="notationToggleButton" type="button">Notas: Do, Re, Mi ⇄</button>
+        <button class="button button-primary button-large" id="startButton" type="button">Cantar</button>
+        <button class="button button-danger button-large" id="stopButton" type="button" disabled>Detener</button>
+        <button class="button button-large" id="detailButton" type="button" disabled>Ver detalle</button>
+        <button class="button button-large hidden" id="fullButton" type="button">Ver cancion completa</button>
+      </div>
+    </section>
+
+    <section class="take-player" id="takePlayer">
+      <div class="take-player-head">
+        <div>
+          <span>Toma guardada</span>
+          <strong id="selectedTakeLabel">Sin toma seleccionada</strong>
+        </div>
+        <div id="takeTimeLabel">0:00 / 0:00</div>
+      </div>
+      <div class="take-player-controls">
+        <button class="button" id="takePlayButton" type="button" disabled>Reproducir toma</button>
+        <button class="button" id="takeStopButton" type="button" disabled>Parar</button>
+        <button class="button" id="takeRenameButton" type="button" disabled>Renombrar</button>
+        <button class="button" id="takeFavoriteButton" type="button" disabled>Favorita</button>
+        <button class="button button-danger" id="takeDeleteButton" type="button" disabled>Eliminar toma</button>
+      </div>
+      <div class="mix-row">
+        <button class="button mix-button" id="voiceMuteButton" type="button" disabled>Voz</button>
+        <input id="voiceVolume" type="range" min="0" max="100" value="85" disabled>
+      </div>
+      <div class="mix-row">
+        <button class="button mix-button" id="trackMuteButton" type="button" disabled>Pista</button>
+        <input id="trackVolume" type="range" min="0" max="100" value="65" disabled>
+      </div>
+      <div class="sync-row">
+        <span>Sincronia pista</span>
+        <input id="syncOffset" type="range" min="-300" max="300" value="0" disabled>
+        <strong id="syncOffsetLabel">0 ms</strong>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal-backdrop hidden" id="songModal" role="dialog" aria-modal="true" aria-labelledby="songModalTitle">
+    <form class="song-modal" id="songModalForm">
+      <div class="modal-head">
+        <div>
+          <div class="section-label" id="songModalEyebrow">Biblioteca</div>
+          <h2 id="songModalTitle">Agregar canción</h2>
+        </div>
+        <button class="button modal-close" id="songModalCancelX" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="selected-file">
+        <span>Audio seleccionado</span>
+        <strong id="songModalFileName">Audio</strong>
+      </div>
+      <label class="modal-field" for="songTitleInput">
+        <span>Título</span>
+        <input id="songTitleInput" type="text" autocomplete="off" required>
+      </label>
+      <label class="modal-field" for="songArtistInput">
+        <span>Artista</span>
+        <input id="songArtistInput" type="text" autocomplete="off">
+      </label>
+      <p class="modal-error" id="songModalError"></p>
+      <div class="modal-actions">
+        <button class="button" id="songModalCancel" type="button">Cancelar</button>
+        <button class="button button-primary" id="songModalSubmit" type="submit">Agregar</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal-backdrop hidden" id="genericModal" role="dialog" aria-modal="true" aria-labelledby="genericModalTitle">
+    <form class="song-modal" id="genericModalForm">
+      <div class="modal-head">
+        <div>
+          <div class="section-label" id="genericModalEyebrow">Toma</div>
+          <h2 id="genericModalTitle">Gestionar toma</h2>
+        </div>
+        <button class="button modal-close" id="genericModalCancelX" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <p class="modal-message" id="genericModalMessage"></p>
+      <label class="modal-field hidden" id="genericModalInputRow" for="genericModalInput">
+        <span id="genericModalInputLabel">Nombre</span>
+        <input id="genericModalInput" type="text" autocomplete="off">
+      </label>
+      <p class="modal-error" id="genericModalError"></p>
+      <div class="modal-actions">
+        <button class="button" id="genericModalCancel" type="button">Cancelar</button>
+        <button class="button button-primary" id="genericModalSubmit" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="app.js"></script>
+  <script src="youtube.js"></script>
+  <script src="feedback.js"></script>
+  <script src="lyrics.js"></script>
+  <script src="review.js"></script>
+  <script src="devices.js"></script>
+  <script src="library.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="tutorial.js"></script>
+  <script src="guide.js"></script>
+</body>
+</html>

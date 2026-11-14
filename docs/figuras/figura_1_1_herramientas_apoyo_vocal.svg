@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="350" viewBox="0 0 1600 350">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#46515F"/>
+</marker>
+</defs>
+<rect width="1600" height="350" fill="#FFFFFF"/>
+<polyline points="290,175 355,175" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="595,175 660,175" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="900,175 965,175" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="1205,175 1270,175" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="50" y="120" width="240" height="110" rx="8" fill="#DCEAF7" stroke="#4779A8" stroke-width="2"/>
+<g transform="translate(64 161.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h3l2-5 4 10 2-5h5"/></g>
+<text x="184.4" y="168.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="184.4" dy="0">Interpretación</tspan><tspan x="184.4" dy="26.04">vocal</tspan></text>
+<rect x="355" y="120" width="240" height="110" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<g transform="translate(369 161.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="6" height="6" rx="1"/><rect x="15" y="5" width="6" height="6" rx="1"/><rect x="9" y="15" width="6" height="6" rx="1"/><path d="M9 8h6M18 11v2l-6 2M6 11v2l6 2"/></g>
+<text x="489.4" y="168.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="489.4" dy="0">Captura y</tspan><tspan x="489.4" dy="26.04">procesamiento</tspan></text>
+<rect x="660" y="120" width="240" height="110" rx="8" fill="#E5F2EA" stroke="#4D8064" stroke-width="2"/>
+<g transform="translate(674 161.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16l4-5 4 3 5-7 3 3"/><path d="M4 20h16"/></g>
+<text x="794.4" y="168.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="794.4" dy="0">Extracción de</tspan><tspan x="794.4" dy="26.04">características</tspan></text>
+<rect x="965" y="120" width="240" height="110" rx="8" fill="#FFF3D6" stroke="#A87822" stroke-width="2"/>
+<g transform="translate(979 161.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19h18"/></g>
+<text x="1099.4" y="168.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="1099.4" dy="0">Nota, curva o</tspan><tspan x="1099.4" dy="26.04">puntuación</tspan></text>
+<rect x="1270" y="120" width="240" height="110" rx="8" fill="#FBE8E8" stroke="#A84B4B" stroke-width="2"/>
+<g transform="translate(1284 161.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/></g>
+<text x="1404.4" y="168.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="1404.4" dy="0">Interpretación</tspan><tspan x="1404.4" dy="26.04">del usuario</tspan></text>
+<text x="800" y="295.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="normal" fill="#5B6472"><tspan x="800" dy="0">El resultado requiere interpretación por parte del usuario.</tspan></text>
+</svg>

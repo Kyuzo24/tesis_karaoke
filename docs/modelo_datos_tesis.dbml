@@ -1,0 +1,169 @@
+// Modelo de datos propuesto para el sistema de análisis vocal
+
+Table cancion {
+  id varchar(80) [pk, note: 'Identificador estable de la canción']
+  titulo varchar(200) [not null]
+  artista varchar(200)
+  original_path varchar(500) [not null]
+  creada_en datetime [not null]
+  activa boolean [not null, default: true]
+}
+
+Table configuracion {
+  id integer [pk, increment]
+  tipo varchar(40) [not null, note: 'referencia, tiempo_real o analisis']
+  version varchar(30) [not null]
+  parametros_json text [not null]
+  hash_config varchar(64) [not null, unique]
+  creada_en datetime [not null]
+}
+
+Table referencia {
+  id varchar(80) [pk]
+  cancion_id varchar(80) [not null]
+  configuracion_id integer [not null]
+  version integer [not null]
+  vocals_path varchar(500) [not null]
+  instrumental_path varchar(500) [not null]
+  pitch_path varchar(500) [not null]
+  modelo_separacion varchar(100) [not null]
+  metodo_pitch varchar(100) [not null]
+  creada_en datetime [not null]
+  estado varchar(30) [not null]
+
+  indexes {
+    (cancion_id, version) [unique]
+  }
+}
+
+Table sesion {
+  id varchar(80) [pk]
+  referencia_id varchar(80) [not null]
+  configuracion_tiempo_real_id integer
+  grabacion_path varchar(500) [not null]
+  fecha_inicio datetime [not null]
+  duracion_segundos decimal(10,3)
+  sample_rate integer [not null]
+  estado varchar(30) [not null]
+}
+
+Table analisis {
+  id varchar(80) [pk]
+  sesion_id varchar(80) [not null]
+  configuracion_id integer [not null]
+  version integer [not null]
+  pitch_usuario_path varchar(500)
+  alineacion_path varchar(500)
+  metodo_alineacion varchar(100) [not null]
+  porcentaje_pitch_valido decimal(6,3)
+  estado varchar(30) [not null]
+  creado_en datetime [not null]
+
+  indexes {
+    (sesion_id, version) [unique]
+  }
+}
+
+Table metrica {
+  analisis_id varchar(80) [pk]
+  error_promedio_cents decimal(10,4)
+  error_firmado_cents decimal(10,4)
+  desviacion_cents decimal(10,4)
+  porcentaje_50 decimal(6,3)
+  porcentaje_100 decimal(6,3)
+  puntos_comparados integer [not null, default: 0]
+  costo_dtw decimal(14,5)
+}
+
+Table segmento {
+  id varchar(80) [pk]
+  analisis_id varchar(80) [not null]
+  inicio_referencia decimal(10,3) [not null]
+  fin_referencia decimal(10,3) [not null]
+  inicio_usuario decimal(10,3) [not null]
+  fin_usuario decimal(10,3) [not null]
+  categoria varchar(50) [not null]
+  magnitud_cents decimal(10,4)
+  duracion_segundos decimal(10,3) [not null]
+  severidad varchar(20) [not null]
+  confianza decimal(5,4) [not null]
+  prioridad integer [not null]
+  evidencia_json text [not null]
+}
+
+Table retroalimentacion {
+  id varchar(80) [pk]
+  analisis_id varchar(80) [not null]
+  tipo_generador varchar(30) [not null, note: 'plantilla, llm_local o llm_remoto']
+  modelo varchar(100)
+  texto text [not null]
+  validada boolean [not null, default: false]
+  creada_en datetime [not null]
+}
+
+Table retroalimentacion_segmento {
+  retroalimentacion_id varchar(80) [not null]
+  segmento_id varchar(80) [not null]
+
+  indexes {
+    (retroalimentacion_id, segmento_id) [pk]
+  }
+}
+
+Table comparacion {
+  id varchar(80) [pk]
+  analisis_anterior_id varchar(80) [not null]
+  analisis_actual_id varchar(80) [not null]
+  comparable boolean [not null]
+  motivo_no_comparable text
+  resumen text
+  creada_en datetime [not null]
+
+  indexes {
+    (analisis_anterior_id, analisis_actual_id) [unique]
+  }
+}
+
+Table cambio {
+  id varchar(80) [pk]
+  comparacion_id varchar(80) [not null]
+  categoria varchar(50) [not null]
+  estado varchar(30) [not null, note: 'mejoro, persistio, empeoro o no_concluyente']
+  variacion decimal(10,4)
+  evidencia_json text [not null]
+}
+
+Ref: referencia.cancion_id > cancion.id
+Ref: referencia.configuracion_id > configuracion.id
+Ref: sesion.referencia_id > referencia.id
+Ref: sesion.configuracion_tiempo_real_id > configuracion.id
+Ref: analisis.sesion_id > sesion.id
+Ref: analisis.configuracion_id > configuracion.id
+Ref: metrica.analisis_id - analisis.id
+Ref: segmento.analisis_id > analisis.id
+Ref: retroalimentacion.analisis_id > analisis.id
+Ref: retroalimentacion_segmento.retroalimentacion_id > retroalimentacion.id
+Ref: retroalimentacion_segmento.segmento_id > segmento.id
+Ref: comparacion.analisis_anterior_id > analisis.id
+Ref: comparacion.analisis_actual_id > analisis.id
+Ref: cambio.comparacion_id > comparacion.id
+
+TableGroup Preparacion {
+  cancion
+  referencia
+  configuracion
+}
+
+TableGroup Sesiones_y_analisis {
+  sesion
+  analisis
+  metrica
+  segmento
+}
+
+TableGroup Retroalimentacion_y_evolucion {
+  retroalimentacion
+  retroalimentacion_segmento
+  comparacion
+  cambio
+}

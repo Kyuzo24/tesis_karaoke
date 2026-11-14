@@ -1,0 +1,13 @@
+Karaoke Studio 1.0.2
+
+Aplicación de escritorio para Windows 10 y 11 de 64 bits.
+
+La biblioteca empieza vacía. Puedes agregar tus propias canciones desde la aplicación.
+Se incluyen Python, las herramientas de audio y el modelo de separación.
+Se necesita conexión para buscar y descargar canciones, buscar letras y, si falta en el equipo, instalar Microsoft WebView2.
+
+Las canciones y grabaciones se guardan en el perfil de Windows de cada usuario, en:
+%LOCALAPPDATA%\Karaoke Studio\Datos
+
+Actualizar o desinstalar la aplicación conserva esos archivos personales.
+La separación de una canción puede tardar varios minutos según el equipo.

@@ -1,0 +1,44 @@
+# Entornos y caches
+venv/
+.venv/
+.youtube-env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+node_modules/
+
+# Configuracion privada
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Audios, bibliotecas y resultados locales
+/data/
+/canciones/
+/grabaciones/
+/separated/
+/output/
+*.wav
+*.mp3
+*.flac
+/ref.csv
+/usr.csv
+
+# Instaladores y paquetes generados
+/dist/
+/build/
+/packaging/payload/
+/packaging/installed-test/
+/packaging/tools/
+*.exe
+*.zip
+*.part
+*.log
+
+# Temporales de Office y sistema
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store

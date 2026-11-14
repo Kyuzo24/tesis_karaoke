@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="865" viewBox="0 0 1000 865">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#46515F"/>
+</marker>
+</defs>
+<rect width="1000" height="865" fill="#FFFFFF"/>
+<polyline points="500,150 500,205" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="500,315 500,370" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="500,480 500,535" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<polyline points="500,625 500,680" fill="none" stroke="#46515F" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="280" y="60" width="440" height="90" rx="8" fill="#DCEAF7" stroke="#4779A8" stroke-width="2"/>
+<g transform="translate(294 91.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h3l2-5 4 10 2-5h5"/></g>
+<text x="516.0" y="112.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="516.0" dy="0">Interpretación vocal</tspan></text>
+<rect x="280" y="205" width="440" height="110" rx="8" fill="#F3F4F6" stroke="#6B7280" stroke-width="2"/>
+<g transform="translate(294 246.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h3l2-4 3 8 3-8 2 4h3"/></g>
+<text x="516.0" y="253.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="normal" fill="#1F2937"><tspan x="516.0" dy="0">Datos acústicos</tspan><tspan x="516.0" dy="26.04">Frecuencia fundamental y pitch</tspan></text>
+<rect x="280" y="370" width="440" height="110" rx="8" fill="#FFF3D6" stroke="#A87822" stroke-width="2"/>
+<g transform="translate(294 411.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19V9M12 19V5M19 19v-7"/><path d="M3 19h18"/></g>
+<text x="516.0" y="419.6" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="normal" fill="#1F2937"><tspan x="516.0" dy="0">Indicadores cuantitativos</tspan><tspan x="516.0" dy="24.8">Notas, cents, curvas y puntuaciones</tspan></text>
+<rect x="230" y="535" width="540" height="90" rx="8" fill="#FBE8E8" stroke="#A84B4B" stroke-width="2"/>
+<g transform="translate(244 566.5) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2.5 20h19L12 3z"/><path d="M12 9v5M12 17h.01"/></g>
+<text x="516.0" y="587.0" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="bold" fill="#1F2937"><tspan x="516.0" dy="0">BRECHA DE INTERPRETACIÓN</tspan></text>
+<rect x="280" y="680" width="440" height="125" rx="8" fill="#E5F2EA" stroke="#4D8064" stroke-width="2"/>
+<g transform="translate(294 729.0) scale(1.125)" fill="none" stroke="#1F2937" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></g>
+<text x="516.0" y="727.18" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="normal" fill="#1F2937"><tspan x="516.0" dy="0">Información útil para el usuario</tspan><tspan x="516.0" dy="22.32">Qué ocurrió, dónde ocurrió, si se repitió</tspan><tspan x="516.0" dy="22.32">y cómo ha evolucionado</tspan></text>
+</svg>

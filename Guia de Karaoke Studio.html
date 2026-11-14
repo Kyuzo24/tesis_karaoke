@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Guía de uso · Karaoke Studio</title>
+<style>
+:root{color-scheme:light dark;--bg:#faf9f3;--fg:#272a23;--line:#c7cabd;--accent:#edc251;--card:#fff}
+@media(prefers-color-scheme:dark){:root{--bg:#171916;--fg:#eef0e8;--line:#464a40;--card:#20231e}}
+*{box-sizing:border-box}body{margin:0;padding:clamp(14px,3vw,30px);font:16px/1.55 system-ui,sans-serif;color:var(--fg);background:var(--bg)}main{max-width:54rem;margin:auto}
+h1,h2,h3{line-height:1.22}h1{margin:0}header p{margin:.35rem 0 1rem}.tabs{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:.85rem;border-bottom:1px solid var(--line)}
+button{font:inherit;font-size:.9rem;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:.4rem .75rem;cursor:pointer}button[aria-selected=true]{background:var(--accent);color:#24261d;font-weight:700}button:focus-visible{outline:3px solid #5895db;outline-offset:2px}
+h2{margin:1.35rem 0}h3{font-size:1.04rem;margin:0}article{padding:.95rem 0;border-top:1px solid var(--line)}article p{margin:.35rem 0 0}
+@media print{.tabs{display:none}[role=tabpanel][hidden]{display:block}article{break-inside:avoid}}
+</style></head><body><main><header><h1>Guía de uso · Karaoke Studio</h1><p>Elige un apartado para consultar sus controles y recorrer una práctica a tu ritmo.</p></header>
+<div class="tabs" role="tablist" aria-label="Apartados de la guía"><button id="tab0" type="button" role="tab" aria-controls="panel0" aria-selected="true" tabindex="0">Resumen</button>
+<button id="tab1" type="button" role="tab" aria-controls="panel1" aria-selected="false" tabindex="-1">Biblioteca</button>
+<button id="tab2" type="button" role="tab" aria-controls="panel2" aria-selected="false" tabindex="-1">Practicar</button>
+<button id="tab3" type="button" role="tab" aria-controls="panel3" aria-selected="false" tabindex="-1">Resultado</button>
+<button id="tab4" type="button" role="tab" aria-controls="panel4" aria-selected="false" tabindex="-1">Historial</button>
+<button id="tab5" type="button" role="tab" aria-controls="panel5" aria-selected="false" tabindex="-1">Diagnóstico</button>
+<button id="tab6" type="button" role="tab" aria-controls="panel6" aria-selected="false" tabindex="-1">Ajustes</button></div>
+<section role="tabpanel" id="panel0" aria-labelledby="tab0" tabindex="0"><h2>Tu primera práctica</h2>
+<article><h3>Una canción para empezar</h3><p>Si ya hay una canción que te gusta en <b>Biblioteca</b>, selecciónala y pulsa <b>Practicar</b>. Si prefieres otra, <b>Agregar canción</b> te permite buscarla en YouTube Music o usar un archivo de tu equipo.</p></article>
+<article><h3>Para cantar como te acomode</h3><p>Para grabarte sirve el micrófono integrado del computador o uno externo. Puedes escuchar la pista por los parlantes o con audífonos. Los audífonos ayudan si la pista se cuela en la grabación. Si el sonido ya te acomoda, puedes empezar con los dispositivos que tienes.</p></article>
+<article><h3>Una frase o la canción completa</h3><p><b>Cantar</b> inicia la toma. Puedes cantar hasta el final o pulsar <b>Detener</b> cuando quieras. Después encontrarás tu grabación en <b>Resultado</b> para escucharla ahora, y en <b>Historial</b> para volver a ella otro día.</p></article>
+</section>
+<section role="tabpanel" id="panel1" aria-labelledby="tab1" tabindex="0" hidden><h2>Canciones y colecciones</h2>
+<article><h3>Una canción de YouTube Music o de tu equipo</h3><p>En <b>Agregar canción</b> puedes buscar por título y artista, o usar <b>Elegir archivo local</b>. En los resultados de YouTube Music, el artista, el álbum y la duración ayudan a reconocer la versión que buscas. Una grabación con voz le da a la aplicación la melodía que usará como referencia.</p></article>
+<article><h3>Qué ocurre al agregarla</h3><p>Después de confirmar el título y el artista con <b>Agregar</b>, la aplicación prepara la pista y detecta las notas de la voz. El panel de progreso muestra cómo va. La aplicación debe permanecer abierta hasta que termine la preparación. La canción quedará en tu biblioteca para las próximas sesiones.</p></article>
+<article><h3>Tu repertorio</h3><p>En <b>Canciones</b>, el menú <b>Ordenar</b> permite encontrar un tema por título, por cuándo lo agregaste o por cuánto lo has cantado. Si te gusta agrupar tus canciones, en <b>Colecciones → Nueva colección</b> puedes crear un grupo y añadirle temas desde <b>Organizar en colecciones</b>.</p></article>
+</section>
+<section role="tabpanel" id="panel2" aria-labelledby="tab2" tabindex="0" hidden><h2>La voz y la referencia en vivo</h2>
+<article><h3>Al empezar a cantar</h3><p>Desde la canción seleccionada, <b>Practicar</b> abre el gráfico y <b>Cantar</b> inicia una toma, es decir, una grabación de tu interpretación. Antes de que suene la pista, la aplicación mide el ruido ambiente. Esperar en silencio esos instantes ayuda a que reconozca mejor tu voz.</p></article>
+<article><h3>Qué muestra el gráfico</h3><p>El tiempo avanza de izquierda a derecha. Cada bloque marca la altura y la duración de una nota de referencia. Si en ese instante tu trazo queda más arriba, tu voz suena más aguda. Si queda más abajo, suena más grave. Puedes mirar el gráfico mientras cantas o concentrarte en la música y revisarlo después.</p></article>
+<article><h3>La letra en pantalla</h3><p>Si te gusta cantar con la letra a la vista, en <b>Configurar letra</b> puedes buscarla en LRCLIB o importar un archivo .lrc sincronizado. Conviene que corresponda a la misma versión de la canción. Si aparece demasiado pronto, un ajuste positivo en milisegundos la retrasa. <b>Guardar ajuste</b> conserva ese cambio y la casilla <b>Mostrar</b> permite ocultar la letra.</p></article>
+<article><h3>Hasta dónde cantar</h3><p><b>Detener</b> termina la toma y permite revisar lo que alcanzaste a cantar. Si solo te interesa el primer coro, ese puede ser tu punto de cierre. Para escuchar cómo cambia de un intento a otro, suele ayudar cantar hasta la misma frase.</p></article>
+</section>
+<section role="tabpanel" id="panel3" aria-labelledby="tab3" tabindex="0" hidden><h2>Tu interpretación</h2>
+<article><h3>Cuánto se pudo revisar</h3><p><b>Notas revisadas</b> indica cuántas notas de referencia pudieron compararse con tu voz. Si aparecen 3 de 12, los porcentajes de cercanía describen esas tres. La grabación completa sigue disponible para escuchar el resto del pasaje.</p></article>
+<article><h3>Qué significan los porcentajes</h3><p><b>Notas muy cercanas</b> incluye las notas comparadas que quedaron a medio semitono o menos de la referencia (50 cents). <b>Notas cercanas</b> incluye las que quedaron a un semitono o menos (100 cents). Una nota muy cercana cuenta en ambos porcentajes.</p></article>
+<article><h3>Una frase que te interese</h3><p>En <b>Análisis por fragmentos</b> puedes elegir un intervalo y usar <b>Escuchar mi fragmento</b> para oírlo junto con la observación que aparece en pantalla. Por ejemplo, si la última nota quedó más grave de lo que buscabas, podrías probar un final un poco más agudo en otra toma.</p></article>
+<article><h3>Tu voz, sola o con la pista</h3><p><b>Reproducir toma</b> permite escuchar cómo suena tu voz junto al acompañamiento. Si prefieres oírla sola, puedes silenciar la pista. <b>Ver detalle</b> acerca el gráfico y la vista de canción completa permite ubicar ese pasaje dentro del tema.</p></article>
+</section>
+<section role="tabpanel" id="panel4" aria-labelledby="tab4" tabindex="0" hidden><h2>Tus grabaciones</h2>
+<article><h3>Dónde están tus grabaciones</h3><p><b>Historial</b> muestra las tomas de la canción seleccionada en Biblioteca. Al elegir una toma, el gráfico, el reproductor y el análisis pasan a mostrar esa grabación. Para ver las de otro tema, puedes cambiar de canción en Biblioteca.</p></article>
+<article><h3>Cómo reconocer una toma</h3><p>Si quieres recordar qué estabas practicando, <b>Renombrar</b> te permite ponerle un nombre como «Primera vez que canto el coro». También puedes marcar una toma como <b>Favorita</b> para reconocerla al volver.</p></article>
+<article><h3>Dos versiones de una misma frase</h3><p>Si quieres seguir tu avance, una opción es escuchar el mismo pasaje en dos tomas. Además de cómo te suena, puedes mirar dónde quedó tu voz respecto de la referencia y cuántas notas se compararon en cada intento. <b>Eliminar toma</b> corresponde a la grabación seleccionada.</p></article>
+</section>
+<section role="tabpanel" id="panel5" aria-labelledby="tab5" tabindex="0" hidden><h2>La referencia de la canción</h2>
+<article><h3>De dónde sale la referencia</h3><p>Si te da curiosidad cómo se identificaron las notas de la canción, <b>Analizar referencia</b> muestra la lectura de la voz original del tema seleccionado. El análisis de tu propia toma está en Resultado e Historial.</p></article>
+<article><h3>Las tres líneas del gráfico</h3><p>La leyenda identifica tres lecturas de la misma voz. <b>Crudo</b> muestra la altura detectada inicialmente. <b>Filtrado</b> muestra los puntos que se conservaron y <b>Corregido</b>, la altura tras los ajustes. Para ver qué cambió en una nota, puedes comparar las líneas en el mismo punto del eje de tiempo.</p></article>
+<article><h3>Cuando una nota parece saltar</h3><p>A veces la referencia cambia bruscamente de altura en una vocal que suena sostenida. Mirar ese instante en las tres líneas permite ver si el salto estaba en la detección inicial o cambió después. El indicador <b>Octavas</b> da información sobre las correcciones de octava.</p></article>
+</section>
+<section role="tabpanel" id="panel6" aria-labelledby="tab6" tabindex="0" hidden><h2>Sonido y preferencias</h2>
+<article><h3>Por dónde entra y sale el sonido</h3><p>Si quieres cambiar de dispositivo, <b>Micrófono</b> permite elegir entre las entradas disponibles y <b>Salida al cantar</b>, por dónde escucharás la pista. La selección se guarda al elegirla y se aplica a la próxima grabación. Si hay una toma en curso, puedes cambiar el dispositivo cuando termine.</p></article>
+<article><h3>Si tu voz no aparece en el gráfico</h3><p>Conviene comprobar que esté seleccionado el micrófono que estás usando y que Windows permita el acceso. Una toma corta suele bastar para probarlo. Si el micrófono recoge mucho acompañamiento, puedes bajar el volumen de los parlantes o probar con audífonos. <b>Ruido</b> y <b>Descartes</b> ofrecen más detalles sobre la detección.</p></article>
+<article><h3>El gráfico a tu gusto</h3><p>En <b>Notación de notas</b> puedes elegir los nombres que te resulten más familiares, como Do, Re, Mi o C, D, E. Ambas opciones representan las mismas alturas. En <b>Apariencia</b> puedes elegir el tema claro u oscuro.</p></article>
+<article><h3>Al abrir la aplicación</h3><p>Si prefieres empezar en Biblioteca, la casilla <b>No volver a mostrar al iniciar</b> está en <b>Guía de uso</b>. La guía queda disponible en el menú lateral, donde también puedes volver a activar su aparición al inicio.</p></article>
+</section>
+</main><script>
+const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+function select(tab) {
+  for (const item of tabs) {
+    const active = item === tab;
+    item.setAttribute('aria-selected', String(active));
+    item.tabIndex = active ? 0 : -1;
+    document.getElementById(item.getAttribute('aria-controls')).hidden = !active;
+  }
+}
+tabs.forEach((tab, index) => {
+  tab.onclick = () => select(tab);
+  tab.onkeydown = event => {
+    const next = {ArrowRight:(index+1)%tabs.length, ArrowLeft:(index+tabs.length-1)%tabs.length, Home:0, End:tabs.length-1}[event.key];
+    if (next === undefined) return;
+    event.preventDefault();
+    select(tabs[next]);
+    tabs[next].focus();
+  };
+});
+if (window.self !== window.top) document.querySelector('header h1').hidden = true;
+</script></body></html>
