@@ -1,0 +1,1264 @@
+\documentclass[12pt,letterpaper]{report}
+\usepackage[left=3cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\usepackage{polyglossia}
+\setdefaultlanguage{spanish}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\normalfont\bfseries\Large}{\thechapter.}{0.6em}{}
+\titleformat{name=\chapter,numberless}[hang]{\normalfont\bfseries\Large}{}{0pt}{}
+\titlespacing*{\chapter}{0pt}{-0.5cm}{0.8cm}
+\renewcommand{\contentsname}{TABLA DE CONTENIDOS}
+\renewcommand{\listfigurename}{ÍNDICE DE FIGURAS}
+\renewcommand{\listtablename}{ÍNDICE DE TABLAS}
+\renewcommand{\tablename}{Cuadro}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.35em}
+\sloppy
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\includegraphics[width=0.24\textwidth]{figuras/image1.png}\\[0.8cm]
+{\bfseries UNIVERSIDAD DE TALCA\par}
+{\bfseries FACULTAD DE INGENIERÍA\par}
+{\bfseries ESCUELA DE INGENIERÍA CIVIL EN COMPUTACIÓN\par}
+\vfill
+{\Large\bfseries Sistema de análisis vocal, detección de patrones de error y retroalimentación basado en procesamiento digital de señales\par}
+\vspace{2.5cm}
+{\bfseries DIEGO ALFONSO TAPIA VÁSQUEZ\par}
+\vfill
+{Curicó - Chile\par}
+{Junio, 2026\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Introducción}
+
+\section{Contexto}
+
+La práctica del canto requiere desarrollar la capacidad de controlar la altura tonal de la voz y mantener una relación coherente con la melodía interpretada. Este proceso puede verse influido por factores como la experiencia del cantante, la dificultad de la pieza musical y las condiciones de retroalimentación disponibles. Bottalico, Graetzer y Hunter observaron diferencias en la precisión tonal asociadas al nivel de entrenamiento y a la retroalimentación auditiva externa, lo que evidencia la relevancia de contar con información que permita al cantante reconocer el comportamiento de su voz durante la interpretación [1].
+
+Una de las principales características utilizadas para representar la altura tonal es la frecuencia fundamental o pitch. Esta permite describir la evolución de la voz a lo largo del tiempo y establecer su correspondencia con notas musicales. A partir de esta información es posible analizar aspectos como la precisión tonal, la estabilidad y el seguimiento de una melodía. Por este motivo, el pitch ha sido empleado en diferentes propuestas de evaluación automática del canto. Tsai y Lee desarrollaron un método de evaluación de interpretaciones de karaoke basado en características de pitch, volumen y ritmo [2], mientras que Nakano, Goto e Hiraga propusieron evaluar habilidades vocales mediante la precisión de intervalos melódicos y características del vibrato [3].
+
+El desarrollo de técnicas de procesamiento digital de audio ha permitido incorporar este tipo de análisis en herramientas dirigidas a la práctica musical. Actualmente existen afinadores digitales, aplicaciones de karaoke, visualizadores de pitch y sistemas de entrenamiento vocal capaces de capturar la voz y presentar información sobre la nota detectada, la frecuencia fundamental o la cercanía respecto de una melodía de referencia. La utilización de información visual como apoyo al aprendizaje del control tonal también ha sido estudiada anteriormente. Howard y Welch analizaron la aplicación de retroalimentación visual para favorecer el aprendizaje consciente del control del pitch durante el canto [4].
+
+Estas herramientas permiten que el usuario observe distintos aspectos acústicos de su interpretación. Dependiendo de su propósito, pueden representar la voz mediante notas musicales, curvas temporales, indicadores de afinación o puntuaciones generales. Como se sintetiza en la Figura 1.1, el proceso habitual consiste en capturar la interpretación, extraer características acústicas y presentar los resultados mediante alguna representación visual o numérica.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image2.png}
+\caption{Flujo general de las herramientas digitales de apoyo a la práctica vocal. Fuente: elaboración propia a partir de [2]–[4].}
+\label{fig:1-1}
+\end{figure}
+
+Aunque estas representaciones pueden ser útiles para observar el desempeño, su interpretación puede requerir conocimientos musicales o técnicos que no todos los usuarios poseen. Conocer una frecuencia, visualizar una curva o recibir una puntuación no necesariamente permite reconocer qué tipo de dificultad ocurrió, en qué momento de la interpretación apareció o si se manifestó repetidamente. Este escenario establece el contexto para estudiar mecanismos que complementen la información cuantitativa con un análisis temporal y una retroalimentación comprensible para el usuario.
+
+\section{Descripción del problema}
+
+Las herramientas digitales de apoyo al canto pueden representar la altura tonal mediante notas musicales, curvas de pitch, indicadores de afinación o puntuaciones. Estas formas de visualización permiten reconocer diferencias entre una interpretación y una referencia; sin embargo, trasladan al usuario la responsabilidad de interpretar los datos y determinar cuáles son las dificultades relevantes dentro de su desempeño.
+
+La visualización de una nota en tiempo real puede informar al usuario sobre la altura tonal detectada en un instante determinado, pero no describe necesariamente el comportamiento de una frase o de una interpretación completa. De manera similar, una puntuación global puede resumir el desempeño general, pero ocultar diferencias importantes entre distintos momentos de la canción. Dos interpretaciones podrían obtener resultados globales semejantes aun cuando una presente desviaciones sostenidas y otra contenga errores breves en transiciones melódicas.
+
+Los métodos de evaluación automática revisados demuestran que es posible cuantificar una interpretación mediante características como pitch, volumen, ritmo, precisión de intervalos y vibrato [2], [3]. No obstante, dichos indicadores describen dimensiones acústicas específicas y no necesariamente se traducen de manera directa en explicaciones comprensibles para una persona sin conocimientos técnicos. Conceptos como frecuencia fundamental, error en cents o variabilidad tonal pueden ser útiles para un especialista, pero requieren interpretación adicional para convertirse en información aplicable durante la práctica.
+
+Esta dificultad es especialmente relevante para quienes practican canto de manera autónoma. Observar que una curva se aleja de la referencia no permite establecer inmediatamente si la desviación fue aislada, si se mantuvo durante varios segundos, si apareció repetidamente en una región melódica o si ocurrió durante una transición. Como consecuencia, el usuario puede identificar que existió una diferencia, pero no necesariamente comprender qué sucedió ni en qué parte debería concentrar su práctica.
+
+Otra limitación aparece cuando los resultados se presentan como sesiones aisladas. Aunque el usuario pueda comprender lo ocurrido en una interpretación, no necesariamente dispone de información que le permita determinar si sus dificultades han disminuido, persistido o cambiado con la práctica. Para observar esta evolución es necesario conservar resultados comparables y relacionar interpretaciones realizadas sobre una misma referencia a lo largo del tiempo.
+
+En el contexto de este proyecto, se considera que la retroalimentación debe entregar información clara, específica y vinculada con la evidencia obtenida durante el análisis. Esto implica complementar los valores generales con información temporal que permita localizar segmentos relevantes, caracterizar el comportamiento observado y comunicarlo mediante expresiones comprensibles.
+
+La Figura 1.2 representa la brecha existente entre los datos acústicos obtenidos durante una interpretación y la información que resulta directamente útil para orientar la práctica del usuario.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image3.png}
+\caption{Brecha entre la información acústica y la retroalimentación comprensible para el usuario. Fuente: elaboración propia a partir de [2], [3] y [5].}
+\label{fig:1-2}
+\end{figure}
+
+A partir de lo anterior, el problema abordado en este proyecto se define como la dificultad para transformar los datos acústicos y las métricas obtenidas de una interpretación vocal en información temporal, específica y comprensible para un usuario que practica canto de manera autónoma. El desafío no consiste únicamente en detectar diferencias de afinación, sino en reconocer los segmentos donde ocurren comportamientos relevantes, caracterizarlos sin atribuir causas que no puedan demostrarse, comunicar los hallazgos en lenguaje natural y conservar resultados que permitan observar la evolución del usuario a lo largo del tiempo.
+
+\section{Propuesta de solución}
+
+La solución propuesta consiste en desarrollar una aplicación de escritorio orientada al apoyo de la práctica autónoma del canto. El sistema permitirá utilizar una canción como referencia, reproducir su acompañamiento instrumental, capturar la interpretación del usuario y analizar su comportamiento tonal.
+
+La preparación de una canción comenzará con la separación de la voz y el acompañamiento mediante un modelo preentrenado de separación de fuentes. La pista vocal obtenida será utilizada para extraer la melodía de referencia, mientras que la pista instrumental será reproducida durante la sesión de canto. Esta preparación se realizará antes de iniciar la interpretación, evitando incorporar procesos computacionalmente costosos durante la captura del micrófono.
+
+Durante la sesión, el sistema capturará la voz del usuario y estimará su frecuencia fundamental mediante bloques breves de audio. Esta información será estabilizada, convertida en notas musicales y presentada en la interfaz con baja latencia. La visualización tendrá como propósito informar la nota detectada en cada instante, pero no realizará el análisis completo ni generará conclusiones mientras el usuario está cantando.
+
+La señal capturada será almacenada para realizar el análisis posterior. Una vez finalizada la interpretación, el sistema comparará la evolución tonal del usuario con la melodía de referencia. Debido a que ambas interpretaciones pueden presentar diferencias temporales, se aplicará un procedimiento de alineación que permita relacionar sus respectivas secuencias. A partir de esta comparación se calcularán métricas de afinación y estabilidad tonal.
+
+El análisis buscará detectar segmentos temporales donde existan comportamientos relevantes. Estos segmentos no estarán limitados a intervalos de duración fija, sino que serán determinados de acuerdo con la continuidad, magnitud y duración de las desviaciones observadas. Posteriormente, cada segmento será caracterizado según el comportamiento detectado, por ejemplo, una desviación sostenida hacia una región más grave o aguda, inestabilidad tonal, dificultad en una transición melódica o pérdida temporal del seguimiento de la referencia.
+
+Los hallazgos serán priorizados para evitar presentar una cantidad excesiva de observaciones. Esta priorización considerará aspectos como la duración, magnitud y continuidad de las desviaciones. Con base en las métricas y segmentos seleccionados, el sistema generará retroalimentación en lenguaje natural que indique qué ocurrió, dónde ocurrió y qué comportamiento se observó. La retroalimentación no atribuirá causas fisiológicas ni buscará reemplazar la evaluación de un docente especializado.
+
+La estrategia definitiva para generar el texto será evaluada durante el desarrollo. Se considera inicialmente una solución basada en reglas y plantillas construidas a partir de resultados estructurados, junto con la posibilidad de incorporar un modelo de lenguaje local o externo. En caso de utilizarse, el modelo de lenguaje participará únicamente en la redacción de los hallazgos, mientras que su detección, caracterización y priorización permanecerán bajo responsabilidad de los módulos de análisis.
+
+El sistema también permitirá consultar y comparar sesiones realizadas sobre una misma canción y referencia. Para ello, conservará la fecha, las métricas, los segmentos problemáticos y la retroalimentación correspondiente a cada interpretación. La comparación permitirá identificar variaciones en el desempeño, problemas que hayan disminuido o persistido y cambios generales observados durante la práctica.
+
+Los resultados serán presentados mediante una interfaz gráfica que permitirá revisar métricas generales, comparar las curvas de la referencia y del usuario, localizar segmentos problemáticos, consultar la retroalimentación y visualizar la evolución entre sesiones. La comparación entre canciones diferentes no se contempla inicialmente, debido a que sus diferencias de duración, dificultad, rango y estructura melódica podrían producir resultados que no sean directamente equivalentes.
+
+Las canciones, grabaciones, métricas, segmentos y retroalimentaciones serán almacenados localmente mediante una capa de persistencia independiente. La tecnología definitiva de almacenamiento podrá basarse en archivos estructurados o en una base de datos local como SQLite, decisión que será evaluada según las necesidades alcanzadas durante el desarrollo.
+
+La Figura 1.3 presenta el flujo general de la solución propuesta, distinguiendo la preparación de la canción, el procesamiento realizado durante la sesión y el análisis posterior con seguimiento de la evolución.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image4.png}
+\caption{Flujo general de la solución propuesta. Fuente: elaboración propia.}
+\label{fig:1-3}
+\end{figure}
+
+De esta manera, la propuesta busca complementar la detección inmediata de notas con un análisis posterior de la interpretación completa. El sistema transformará los resultados técnicos en información comprensible, conservará evidencia de cada hallazgo y permitirá observar la evolución del usuario mediante la comparación de sesiones realizadas sobre una misma referencia.
+
+\section{Objetivos}
+
+En esta sección se presentan el objetivo general y los objetivos específicos que orientan el desarrollo y la posterior evaluación del proyecto.
+
+\subsection{Objetivo general}
+
+Apoyar la práctica autodidacta del canto mediante el desarrollo de una aplicación de escritorio que detecte notas musicales en tiempo real, analice posteriormente la afinación del usuario respecto de una referencia y permita seguir su evolución, con el propósito de identificar segmentos problemáticos y entregar retroalimentación comprensible sobre su desempeño.
+
+\subsection{Objetivos específicos}
+
+Analizar y seleccionar técnicas de procesamiento digital de señales adecuadas para la separación de fuentes, limpieza, extracción y representación de señales de audio vocal.
+
+Implementar un módulo de preparación de canciones que permita separar la voz del acompañamiento, generar una pista instrumental y obtener una representación tonal de referencia.
+
+Implementar un módulo de estimación de frecuencia fundamental que permita obtener una representación temporal estable de la entonación del usuario y detectar notas musicales en tiempo real.
+
+Transformar la secuencia de frecuencia fundamental en una representación musical mediante notas, octavas y desviaciones en cents, facilitando su interpretación y comparación con una referencia.
+
+Implementar un procedimiento de alineación y análisis comparativo entre la interpretación del usuario y la referencia, con el propósito de identificar desviaciones de afinación y estabilidad tonal.
+
+Definir métricas cuantitativas que permitan medir el desempeño vocal, considerando el error de afinación, la estabilidad tonal, la duración de las desviaciones y la proporción de detecciones válidas.
+
+Desarrollar un mecanismo que detecte dinámicamente, caracterice y priorice segmentos problemáticos, considerando la magnitud, duración y continuidad de los comportamientos observados.
+
+Diseñar un mecanismo de generación de retroalimentación en lenguaje natural que transforme los resultados estructurados del análisis en observaciones comprensibles y trazables para el usuario.
+
+Implementar un mecanismo de seguimiento que permita comparar sesiones realizadas sobre una misma canción y referencia, utilizando métricas y segmentos problemáticos para representar la evolución del usuario a lo largo del tiempo.
+
+Implementar una interfaz interactiva que permita gestionar canciones, realizar sesiones de canto, visualizar la nota detectada en tiempo real, consultar los resultados y observar la evolución entre distintas sesiones.
+
+Evaluar el sistema mediante grabaciones controladas y, cuando corresponda, conjuntos de datos disponibles, considerando la precisión de la estimación tonal, la latencia, la robustez, el funcionamiento de los módulos y la comprensión de la retroalimentación entregada.
+
+\section{Alcances y limitaciones}
+
+El proyecto contempla el desarrollo de un prototipo funcional de escritorio orientado al apoyo de la práctica autónoma del canto. Los siguientes puntos establecen sus alcances y limitaciones.
+
+Alcances
+
+El sistema analizará interpretaciones vocales monofónicas, es decir, grabaciones donde se considere una única voz principal.
+
+El usuario podrá incorporar canciones desde archivos locales y prepararlas para su utilización como referencia.
+
+La preparación de las canciones incluirá la separación de la voz y el acompañamiento mediante un modelo preentrenado de separación de fuentes.
+
+El sistema generará una pista instrumental y extraerá una representación tonal de la voz original.
+
+Durante la interpretación se reproducirá el acompañamiento y se capturará la voz del usuario mediante un micrófono.
+
+La frecuencia fundamental será estimada mediante bloques de audio para detectar y visualizar notas musicales en tiempo real.
+
+La detección inmediata se limitará a mostrar la nota estimada y su correspondiente octava. El análisis completo será realizado después de finalizar la interpretación.
+
+La grabación del usuario será alineada y comparada con la referencia para calcular métricas relacionadas con afinación y estabilidad tonal.
+
+El sistema detectará dinámicamente segmentos problemáticos considerando la continuidad, magnitud y duración de las desviaciones observadas.
+
+Los segmentos podrán caracterizarse mediante comportamientos como desviaciones sostenidas hacia regiones graves o agudas, inestabilidad tonal, dificultades en transiciones melódicas y pérdida temporal del seguimiento de la referencia.
+
+Los hallazgos serán priorizados y utilizados para generar retroalimentación en lenguaje natural sustentada en resultados estructurados.
+
+El sistema conservará localmente las canciones, sesiones, métricas, segmentos y retroalimentaciones generadas.
+
+El usuario podrá consultar y comparar sesiones realizadas sobre una misma canción y referencia para observar su evolución.
+
+La aplicación permitirá visualizar la nota actual, las curvas de la referencia y del usuario, las métricas calculadas, los segmentos problemáticos, la retroalimentación y la evolución histórica.
+
+Limitaciones
+
+El sistema no analizará simultáneamente múltiples voces, armonías vocales, coros ni interpretaciones polifónicas complejas.
+
+El análisis se concentrará en la afinación y estabilidad tonal. No evaluará timbre, técnica respiratoria, dicción, pronunciación, expresividad, postura ni calidad vocal clínica.
+
+Los resultados no constituirán un diagnóstico fisiológico ni reemplazarán la evaluación pedagógica de un docente de canto.
+
+La retroalimentación indicará los comportamientos observados, pero no atribuirá causas que no puedan demostrarse mediante el análisis de la señal.
+
+La comparación histórica se realizará inicialmente entre sesiones asociadas con una misma canción y referencia. No se compararán directamente interpretaciones de canciones diferentes.
+
+El sistema no realizará corrección automática de la voz ni modificará la interpretación del usuario.
+
+La generación de retroalimentación completa no se realizará durante el canto. Solamente la detección y visualización de notas operará en tiempo real.
+
+La calidad de los resultados dependerá de las condiciones de grabación, el nivel de ruido, la calidad del micrófono y la claridad de la voz capturada.
+
+Se utilizarán modelos preentrenados de separación de fuentes. No se contempla entrenar, ajustar o construir modelos propios de aprendizaje automático.
+
+El prototipo será desarrollado como una aplicación local de escritorio. No se contemplan inicialmente versiones web o móviles.
+
+No se incluirán funcionalidades sociales, almacenamiento en la nube ni gestión de múltiples usuarios.
+
+La tecnología definitiva de interfaz, persistencia y generación de lenguaje natural podrá ajustarse durante el desarrollo sin alterar las funciones principales definidas.
+
+La distribución mediante un archivo ejecutable y la integración de un modelo de lenguaje se mantienen como decisiones pendientes de evaluación con el profesor guía.
+
+\section{Plan de trabajo}
+
+El desarrollo del proyecto se organiza de manera incremental, distribuyendo las actividades desde la definición inicial hasta la evaluación del sistema. La planificación considera la construcción progresiva de los componentes, permitiendo validar cada módulo antes de integrarlo con los restantes.
+
+La distribución temporal, duración y estado de las actividades se presentan detalladamente en la Carta Gantt adjunta a esta entrega.
+
+\subsection{Descripción de las etapas del proyecto}
+
+El plan de trabajo se divide en las siguientes etapas:
+
+1. Planificación y diseño: comprende la definición del problema, los objetivos, el alcance, la metodología, los requisitos, las historias de usuario y la arquitectura inicial del sistema.
+
+2. Base del sistema: considera la gestión local de canciones, la separación de voz y acompañamiento, la extracción del pitch de referencia, la reproducción de la pista instrumental y la captura del micrófono.
+
+3. Comparación y métricas: incluye la alineación entre la interpretación del usuario y la referencia, el cálculo de métricas de afinación, la visualización de resultados y su almacenamiento inicial.
+
+4. Interfaz prototipo: corresponde al desarrollo de una primera interfaz que permita integrar el catálogo, la preparación de canciones, las sesiones de canto y la presentación de resultados.
+
+5. Detección de notas en tiempo real: contempla la captura continua mediante bloques de audio, la estimación y estabilización de la frecuencia fundamental, la conversión a notas musicales y la evaluación de la latencia.
+
+6. Análisis avanzado: considera el refinamiento de la alineación y las métricas temporales, junto con la detección, caracterización y priorización de segmentos problemáticos.
+
+7. Generación de retroalimentación: comprende la transformación de los hallazgos estructurados en observaciones en lenguaje natural y la validación de su coherencia y explicabilidad.
+
+8. Persistencia, evolución e interfaz final: incluye el almacenamiento estructurado de las sesiones, la comparación histórica de interpretaciones, la visualización de la evolución y la integración de la interfaz definitiva.
+
+9. Evaluación y cierre: contempla las pruebas funcionales, la evaluación técnica y de usabilidad, las correcciones finales y la documentación del proyecto.
+
+\subsection{Relación entre objetivos y etapas}
+
+Las actividades fueron definidas para responder a los objetivos específicos del proyecto. El Cuadro 1.1 presenta la relación principal entre ambos elementos.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Relación entre los objetivos específicos y las etapas del proyecto. Fuente: elaboración propia.}
+\label{tab:1-1}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Objetivo específico & Etapas asociadas \\
+\hline
+Analizar y seleccionar técnicas de procesamiento de audio & Planificación y diseño \\
+\hline
+Preparar canciones y obtener una referencia tonal & Base del sistema \\
+\hline
+Detectar notas musicales en tiempo real & Detección de notas en tiempo real \\
+\hline
+Transformar el pitch en representaciones musicales & Base del sistema y detección en tiempo real \\
+\hline
+Alinear y comparar interpretaciones & Comparación y métricas; análisis avanzado \\
+\hline
+Definir métricas cuantitativas & Comparación y métricas; análisis avanzado \\
+\hline
+Detectar y priorizar segmentos problemáticos & Análisis avanzado \\
+\hline
+Generar retroalimentación en lenguaje natural & Generación de retroalimentación \\
+\hline
+Comparar sesiones y representar la evolución & Persistencia, evolución e interfaz final \\
+\hline
+Implementar una interfaz interactiva & Interfaz prototipo e interfaz final \\
+\hline
+Evaluar el sistema & Evaluación y cierre \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Estado actual del proyecto}
+
+Hasta el momento se ha desarrollado la base funcional del sistema. El prototipo permite gestionar un catálogo local de canciones, separar la voz del acompañamiento, generar una pista instrumental y extraer una representación de pitch desde la voz original. La extracción incluye filtros de rango, energía, duración y estabilidad destinados a reducir detecciones no representativas.
+
+También se encuentra implementado el flujo inicial de una sesión de canto. El sistema puede reproducir el acompañamiento mientras captura el micrófono, detener la sesión y almacenar la interpretación como un archivo de audio. Posteriormente, extrae el pitch del usuario y realiza una alineación inicial con la referencia mediante DTW.
+
+A partir de la alineación se calculan métricas globales, como el error promedio en cents, la desviación, la tendencia general y el porcentaje de puntos dentro de distintos márgenes de afinación. Los resultados pueden visualizarse mediante curvas de notas y se almacenan localmente en archivos estructurados.
+
+Las funcionalidades existentes se encuentran integradas en una interfaz prototipo desarrollada con Tkinter. Esta permite agregar y eliminar canciones, reprocesar referencias, iniciar y detener sesiones, consultar métricas, visualizar gráficos y ejecutar un diagnóstico técnico del filtrado de pitch.
+
+Algunos componentes se encuentran parcialmente desarrollados. La alineación y las métricas requieren validación y refinamiento, mientras que el manejo de errores y las pruebas del sistema todavía no poseen una cobertura completa. La interfaz actual cumple una función de integración y experimentación, pero no corresponde necesariamente a la tecnología gráfica definitiva.
+
+Las funcionalidades relacionadas con la contribución principal del proyecto permanecen pendientes. Entre ellas se encuentran la detección de notas en tiempo real, el análisis dinámico de segmentos, la caracterización y priorización de problemas, la generación de retroalimentación en lenguaje natural y el seguimiento de la evolución entre sesiones.
+
+Para estimar el avance se revisó el cumplimiento de los requisitos definidos. La clasificación obtenida se presenta en el Cuadro 1.2.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Estado actual de los requisitos del sistema. Fuente: elaboración propia.}
+\label{tab:1-2}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Estado & Cantidad \\
+\hline
+Completados & 16 \\
+\hline
+Parciales & 14 \\
+\hline
+Pendientes & 15 \\
+\hline
+Total & 45 \\
+\hline
+\end{tabularx}
+\end{table}
+
+Considerando únicamente los requisitos completamente implementados, el proyecto presenta un avance del 35,6 \%. Los requisitos parciales no fueron contabilizados como completados, con el propósito de mantener una estimación conservadora. Este resultado refleja que la base técnica y el flujo inicial se encuentran disponibles, mientras que el análisis avanzado, la retroalimentación y el seguimiento histórico concentran el trabajo restante.
+
+\chapter{Marco teórico y trabajo relacionado}
+
+Este capítulo presenta los fundamentos necesarios para comprender el funcionamiento del sistema propuesto. En primer lugar, se introducen conceptos musicales y acústicos relacionados con la altura tonal, la frecuencia fundamental y la afinación. Posteriormente, se abordan las técnicas de procesamiento digital de audio, separación de fuentes, estimación de pitch, alineación temporal y evaluación automática del canto.
+
+Además, se revisan mecanismos para detectar comportamientos problemáticos dentro de una interpretación y generar retroalimentación comprensible. Finalmente, se presentan las tecnologías consideradas y los trabajos relacionados con la propuesta.
+
+\section{Fundamentos musicales y vocales}
+
+\subsection{Frecuencia y altura tonal}
+
+El sonido corresponde a una variación de presión que se propaga a través de un medio. Cuando dicha variación presenta un comportamiento periódico, puede describirse mediante su frecuencia, expresada en hercios (Hz), que indica la cantidad de ciclos producidos durante un segundo.
+
+La frecuencia es una propiedad física de la señal, mientras que la altura tonal corresponde a la percepción que permite ordenar los sonidos desde graves hasta agudos. Aunque ambos conceptos se encuentran relacionados, no son equivalentes. La percepción de altura también puede verse influida por la estructura armónica, la intensidad, la duración y las características del sistema auditivo [5].
+
+La voz humana no produce una onda sinusoidal simple, sino una señal compleja formada por una frecuencia fundamental y múltiples componentes armónicos. La frecuencia fundamental, también denominada F0, se relaciona con la velocidad de vibración de los pliegues vocales y constituye la principal referencia utilizada para estimar la altura tonal de la voz.
+
+En el contexto de este proyecto, la frecuencia fundamental permite representar la evolución tonal de una interpretación a lo largo del tiempo. Su estimación constituye la base para convertir la señal vocal en notas musicales, compararla con una referencia y detectar desviaciones de afinación.
+
+\subsection{Notas musicales y octavas}
+
+En el sistema musical occidental, una octava corresponde al intervalo existente entre dos sonidos cuyas frecuencias mantienen una relación de dos a uno. Por ejemplo, si una nota posee una frecuencia de 440 Hz, la nota equivalente ubicada una octava superior tendrá una frecuencia de 880 Hz, mientras que la ubicada una octava inferior tendrá una frecuencia de 220 Hz.
+
+La afinación temperada divide cada octava en doce semitonos. La relación de frecuencia entre dos semitonos consecutivos corresponde a 2\textasciicircum{}(1/12). Tomando como referencia la nota La4, convencionalmente asociada con 440 Hz, la posición de una frecuencia dentro de la escala puede calcularse mediante:
+
+m = 69 + 12 log₂(f / 440)
+
+donde f representa la frecuencia en hercios y m corresponde al número de nota en la escala MIDI. El valor 69 identifica la nota La4.
+
+Esta representación permite asociar una frecuencia continua con una nota y su correspondiente octava. Sin embargo, durante una interpretación real la frecuencia producida no permanece necesariamente en el valor exacto de una nota. Por esta razón, el sistema debe conservar la frecuencia original y utilizar la nota musical principalmente como una representación comprensible para el usuario.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image5.png}
+\caption{Relación de frecuencia entre una nota y sus octavas. Fuente: elaboración propia.}
+\label{fig:2-1}
+\end{figure}
+
+\subsection{Afinación y estabilidad tonal}
+
+La afinación puede analizarse comparando la frecuencia producida por el cantante con la frecuencia esperada. Debido a que la percepción musical funciona mediante relaciones de frecuencia, esta diferencia suele expresarse en cents en lugar de hercios.
+
+Una octava contiene 1200 cents y cada semitono del sistema temperado contiene 100. La diferencia entre una frecuencia producida y una frecuencia de referencia puede calcularse mediante:
+
+c = 1200 log₂(fᵤ / fᵣ)
+
+donde fᵤ representa la frecuencia producida por el usuario, fᵣ la frecuencia de referencia y c la diferencia expresada en cents. Un resultado positivo indica una interpretación más aguda que la referencia, mientras que un resultado negativo representa una interpretación más grave.
+
+La precisión tonal no debe analizarse únicamente mediante valores aislados. Una interpretación puede presentar pequeñas variaciones naturales, transiciones entre notas y vibrato. Por esta razón, resulta necesario observar también la continuidad y duración de las desviaciones antes de clasificarlas como problemáticas.
+
+La estabilidad tonal se relaciona con la capacidad de mantener una altura relativamente consistente durante una región donde se espera una nota sostenida. Una variabilidad elevada puede indicar inestabilidad, pero también puede corresponder a recursos expresivos. En consecuencia, la interpretación de esta métrica debe considerar el comportamiento de la referencia y el contexto temporal.
+
+Estudios realizados con población general han mostrado que la precisión del canto puede presentar diferencias significativas entre personas y entre distintas tareas vocales [6]. Por este motivo, el sistema propuesto no pretende emitir diagnósticos sobre las capacidades del usuario, sino describir los comportamientos observados durante una interpretación específica.
+
+\section{Procesamiento digital de audio}
+
+El procesamiento digital de audio comprende el conjunto de métodos utilizados para representar, transformar y analizar señales sonoras mediante un sistema computacional. Para que una señal acústica pueda ser procesada, primero debe convertirse desde una variación continua de presión a una secuencia de valores discretos. A partir de esta representación es posible aplicar procedimientos de filtrado, extracción de características, comparación y visualización [7].
+
+\subsection{Digitalización de una señal}
+
+Una señal de audio capturada mediante un micrófono es inicialmente analógica, debido a que varía continuamente en el tiempo y en amplitud. La conversión analógica-digital mide esta señal en instantes determinados y asigna un valor numérico a cada medición. Como resultado se obtiene una secuencia que puede ser almacenada y procesada por un computador.
+
+La digitalización considera principalmente el muestreo y la cuantización. El muestreo determina los instantes en que se observa la señal, mientras que la cuantización establece los valores disponibles para representar su amplitud. La cantidad de bits utilizada influye en la precisión de dicha representación y en el rango dinámico disponible [7].
+
+En una aplicación de análisis vocal, la señal digital conserva la evolución temporal de la voz y permite calcular características como energía, frecuencia fundamental y estabilidad. La calidad de la captura influye directamente en los resultados, debido a que el ruido, la saturación o una amplitud insuficiente pueden dificultar la extracción de información tonal.
+
+\subsection{Frecuencia de muestreo}
+
+La frecuencia de muestreo indica la cantidad de muestras obtenidas durante un segundo y se expresa en hercios. Si una señal continua x(t) es capturada con una frecuencia de muestreo fs, su representación discreta puede expresarse como:
+
+x[n] = x(n / fₛ)
+
+donde n corresponde al índice de la muestra. Una frecuencia de muestreo mayor permite representar componentes de frecuencia más elevadas, pero también aumenta la cantidad de datos que deben almacenarse y procesarse.
+
+De acuerdo con el teorema de muestreo, la frecuencia utilizada debe ser superior al doble de la frecuencia máxima que se desea representar. Cuando esta condición no se cumple pueden aparecer componentes falsas, fenómeno conocido como aliasing. En aplicaciones de audio son habituales frecuencias como 44,1 kHz y 48 kHz, suficientes para representar el rango audible utilizado en grabaciones convencionales [7].
+
+\subsection{Ventanas y bloques de audio}
+
+Una señal vocal cambia constantemente, por lo que su análisis suele realizarse sobre fragmentos breves denominados ventanas o bloques. Cada bloque contiene una cantidad limitada de muestras y representa un intervalo local de la señal. Esto permite estimar características que varían con el tiempo sin esperar a que finalice la grabación completa [8].
+
+Si un bloque contiene N muestras y la frecuencia de muestreo corresponde a fs, su duración puede calcularse mediante:
+
+T = N / fₛ
+
+Los bloques pueden procesarse de manera consecutiva o parcialmente superpuesta. El desplazamiento entre el inicio de dos bloques se denomina salto o hop. El uso de superposición permite observar con mayor continuidad los cambios de la señal, aunque incrementa la cantidad de cálculos requeridos.
+
+La selección del tamaño del bloque implica un compromiso. Un bloque pequeño reduce el tiempo necesario para producir un resultado y favorece una baja latencia, pero contiene menos información y puede generar estimaciones inestables. Un bloque de mayor duración puede mejorar la estabilidad del análisis, aunque retrasa la respuesta del sistema. Esta relación resulta especialmente importante para la detección de notas en tiempo real.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image6.png}
+\caption{Digitalización y procesamiento de una señal mediante bloques. Fuente: elaboración propia.}
+\label{fig:2-2}
+\end{figure}
+
+\subsection{Ruido, silencios y filtrado}
+
+Las grabaciones vocales pueden contener ruido ambiental, filtración del acompañamiento, respiraciones, silencios y otros componentes que no representan una nota cantada. Si estos elementos se procesan como información tonal válida, pueden producir estimaciones erróneas y afectar la comparación con la referencia.
+
+Para reducir este efecto pueden utilizarse criterios de energía, rangos de frecuencia permitidos, duración mínima y continuidad temporal. Los segmentos cuya energía se encuentre bajo un umbral pueden considerarse silencios, mientras que las frecuencias fuera del rango esperado pueden descartarse como detecciones no representativas.
+
+También pueden aplicarse filtros temporales para reducir saltos aislados y estabilizar la trayectoria de la frecuencia fundamental. Sin embargo, un filtrado excesivo puede eliminar transiciones reales, vibrato o notas breves. Por esta razón, los parámetros deben equilibrar la eliminación de ruido con la conservación del comportamiento vocal relevante [7], [8].
+
+En el sistema propuesto, estas operaciones se utilizarán tanto para preparar la melodía de referencia como para procesar la voz del usuario. Los parámetros y procedimientos concretos serán descritos posteriormente en el capítulo de diseño y desarrollo.
+
+\section{Estimación de frecuencia fundamental}
+
+La estimación de frecuencia fundamental busca determinar la periodicidad principal presente en una señal y representarla mediante una frecuencia expresada en hercios. En una señal vocal, este valor se utiliza como una aproximación de la altura tonal producida en cada instante. El resultado no corresponde a una única frecuencia para toda la grabación, sino a una trayectoria temporal de valores de F0.
+
+Esta trayectoria constituye una entrada fundamental para el sistema propuesto, debido a que permite representar la melodía de referencia, visualizar la nota cantada, alinear interpretaciones y calcular diferencias de afinación. La calidad de las etapas posteriores depende de que la estimación mantenga continuidad y descarte los intervalos donde no existe evidencia tonal suficiente.
+
+\subsection{Sonoridad y periodicidad}
+
+No todos los fragmentos de una grabación vocal poseen una frecuencia fundamental definida. Las vocales y otros sonidos sonoros presentan una vibración relativamente periódica de los pliegues vocales, mientras que los silencios, consonantes no sonoras y ciertos ruidos carecen de una periodicidad estable. Por esta razón, los estimadores deben decidir primero si el bloque contiene información tonal válida.
+
+Los métodos basados en periodicidad buscan repeticiones dentro de la forma de onda. El intervalo temporal entre dos repeticiones se denomina periodo y su inverso corresponde a la frecuencia fundamental. Este análisis puede realizarse mediante autocorrelación, funciones de diferencia o análisis espectral. En la práctica, suelen evaluarse varios candidatos antes de seleccionar el valor más probable.
+
+Cuando la periodicidad o energía no alcanza un nivel de confianza suficiente, el bloque debe clasificarse como no sonoro y representarse sin un valor de F0. Esta decisión evita que silencios o ruidos sean convertidos incorrectamente en notas musicales.
+
+\subsection{Estimación mediante pYIN}
+
+pYIN es un método de estimación de frecuencia fundamental que extiende el enfoque YIN mediante un modelo probabilístico. En lugar de depender de un único umbral para seleccionar un periodo, considera múltiples candidatos y asigna probabilidades a las posibles estimaciones. Posteriormente, utiliza la continuidad temporal para obtener una trayectoria de F0 y determinar los intervalos sonoros y no sonoros [9].
+
+Este enfoque resulta útil en señales musicales porque reduce cambios abruptos entre candidatos y proporciona información sobre la probabilidad de sonoridad. Su implementación se encuentra disponible en la biblioteca librosa, donde puede configurarse el rango de frecuencias esperado, el tamaño de los bloques y los parámetros relacionados con la transición entre valores [9].
+
+A pesar de estas ventajas, la calidad del resultado continúa dependiendo del ruido, la intensidad de la voz, el rango configurado y la duración de los bloques. Además, un seguimiento temporal demasiado restrictivo puede suavizar transiciones reales entre notas.
+
+\subsection{WORLD y Pyworld}
+
+WORLD es un sistema de análisis y síntesis de voz que descompone la señal en frecuencia fundamental, envolvente espectral y características aperiódicas. Fue diseñado para producir análisis de alta calidad con un costo computacional adecuado para distintas aplicaciones de voz [11].
+
+Dentro de este ecosistema existen diferentes estimadores de F0. Harvest utiliza información temporal y espectral para generar candidatos y seleccionar una trayectoria confiable, mostrando robustez en señales de voz con distintas condiciones [10]. Otro procedimiento utilizado en WORLD es DIO, cuya estimación inicial puede refinarse posteriormente mediante StoneMask.
+
+Pyworld proporciona acceso a las funciones de WORLD desde Python. En el prototipo actual se utiliza DIO para producir una estimación inicial y StoneMask para refinarla. Cuando esta biblioteca no se encuentra disponible, pYIN puede emplearse como alternativa. La elección definitiva para el procesamiento en tiempo real deberá considerar no solo la precisión, sino también la latencia y el consumo de recursos.
+
+\subsection{Errores frecuentes de estimación}
+
+La estimación de F0 puede presentar errores incluso cuando existe una señal vocal clara. Entre ellos se encuentran los saltos de octava, donde el algoritmo selecciona el doble o la mitad de la frecuencia correcta; las detecciones aisladas durante silencios; la pérdida temporal de valores; y las fluctuaciones producidas por ruido o filtración del acompañamiento.
+
+También pueden producirse dificultades durante ataques de notas, transiciones rápidas, vibrato intenso y regiones de baja energía. Estos comportamientos no deben corregirse únicamente mediante un suavizado general, ya que podrían representar características reales de la interpretación. Por ello, resulta necesario combinar la estimación acústica con criterios de confianza, continuidad y duración.
+
+La Figura 2.3 resume el flujo general utilizado para obtener una trayectoria temporal de frecuencia fundamental a partir de bloques de audio vocal.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image7.png}
+\caption{Flujo general de estimación de frecuencia fundamental. Fuente: elaboración propia.}
+\label{fig:2-3}
+\end{figure}
+
+\subsection{Criterios para el proyecto}
+
+El sistema requiere estimar F0 en dos situaciones diferentes. La preparación de la referencia se realiza antes de la sesión y permite utilizar un procesamiento más detallado, debido a que no posee restricciones estrictas de latencia. En cambio, la visualización de la nota durante el canto requiere producir resultados en intervalos breves y mantener la continuidad de la interfaz.
+
+Por esta razón, los métodos deberán evaluarse considerando precisión, estabilidad, proporción de detecciones válidas, tiempo de procesamiento y comportamiento ante ruido moderado. El algoritmo utilizado para preparar la referencia no necesariamente deberá ser el mismo que se emplee durante la detección en tiempo real.
+
+En ambos casos, la salida deberá conservar los tiempos y frecuencias estimadas antes de transformarlas en notas. Esto permite aplicar filtros, calcular diferencias en cents y mantener trazabilidad entre los resultados informados y los datos acústicos que los sustentan.
+
+\section{Separación de fuentes musicales}
+
+Una grabación musical corresponde generalmente a la mezcla de diferentes fuentes, como voz, batería, bajo y otros instrumentos. Aunque el usuario escucha estas fuentes de manera conjunta, el análisis vocal requiere disponer de una señal donde la voz principal se encuentre suficientemente aislada del acompañamiento.
+
+La separación de fuentes musicales busca estimar las señales individuales que componen una mezcla. El resultado suele organizarse en stems, término utilizado para representar grupos de fuentes relacionados. En una configuración habitual se generan pistas independientes para voz, batería, bajo y otros componentes instrumentales.
+
+\subsection{Separación mediante modelos preentrenados}
+
+Los métodos actuales de separación suelen utilizar modelos de aprendizaje profundo entrenados con mezclas musicales y sus fuentes aisladas. Durante el entrenamiento, el modelo aprende a estimar cada componente a partir de la señal combinada. Posteriormente, el modelo preentrenado puede aplicarse a canciones que no formaron parte de sus datos de entrenamiento.
+
+El uso de modelos preentrenados permite incorporar separación de fuentes sin construir un conjunto de datos propio ni realizar un proceso de entrenamiento. Sin embargo, el resultado depende de las características de la canción, la calidad de la mezcla y la similitud con el material utilizado durante el aprendizaje.
+
+La separación puede realizarse sobre representaciones tiempo-frecuencia, sobre la forma de onda o mediante arquitecturas que combinan ambos dominios. Cada alternativa presenta diferencias en calidad, costo computacional y presencia de artefactos.
+
+\subsection{Spleeter}
+
+Spleeter es una herramienta de separación de fuentes desarrollada para ejecutar modelos preentrenados de manera eficiente. Permite generar configuraciones de dos, cuatro o cinco stems, incluyendo la separación entre voz y acompañamiento. Su diseño facilita la integración en flujos de procesamiento musical y reduce el tiempo necesario para preparar una canción [14].
+
+Esta herramienta constituye una alternativa apropiada cuando la velocidad de procesamiento es prioritaria. No obstante, al igual que otros sistemas, puede conservar restos instrumentales en la pista vocal o eliminar componentes de la voz, lo que debe considerarse antes de utilizar el resultado como referencia tonal.
+
+\subsection{Demucs y Hybrid Transformer Demucs}
+
+Demucs aborda la separación musical mediante modelos que operan directamente sobre la forma de onda. Su arquitectura utiliza una estructura codificador-decodificador y conexiones internas destinadas a reconstruir las fuentes temporales a partir de la mezcla original [12].
+
+Versiones posteriores incorporaron representaciones espectrales y mecanismos de atención. Hybrid Transformer Demucs combina ramas temporales y espectrales con transformadores capaces de intercambiar información entre ambas representaciones. De esta manera, el modelo utiliza simultáneamente características de la forma de onda y del dominio de frecuencia [13].
+
+La implementación actual del proyecto utiliza el modelo HT Demucs para generar cuatro stems: vocals, drums, bass y other. La pista vocals se emplea para obtener el pitch de referencia, mientras que los tres componentes restantes se combinan para construir el acompañamiento instrumental.
+
+\subsection{Artefactos y limitaciones}
+
+La separación de fuentes no produce señales completamente independientes. Pueden permanecer instrumentos en la pista vocal, perderse componentes armónicos de la voz o generarse alteraciones temporales y espectrales. Estos artefactos pueden afectar la estimación de frecuencia fundamental y producir una referencia incompleta o inestable.
+
+También existe un costo computacional relevante. Procesar una canción completa puede requerir varios minutos dependiendo del modelo y del hardware disponible. Por esta razón, la separación debe realizarse durante la preparación de la canción y no mientras el usuario se encuentra cantando.
+
+La Figura 2.4 presenta el flujo utilizado para transformar una canción en una referencia vocal y una pista de acompañamiento.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image8.png}
+\caption{Separación de una canción en fuentes vocales e instrumentales. Fuente: elaboración propia.}
+\label{fig:2-4}
+\end{figure}
+
+\subsection{Criterios para el proyecto}
+
+La herramienta seleccionada debe proporcionar una pista vocal adecuada para extraer la melodía y un acompañamiento que pueda reproducirse durante la sesión. Además, debe permitir reutilizar los resultados, evitando procesar nuevamente una canción cada vez que el usuario desee practicar.
+
+La calidad de la separación deberá revisarse junto con la proporción de pitch válido obtenida desde la voz aislada. Si la pista presenta demasiados artefactos o no contiene suficiente información tonal, el sistema deberá informar que la canción no pudo prepararse de manera confiable.
+
+Demucs fue seleccionado para el prototipo por ofrecer una separación organizada en stems y disponer de modelos preentrenados que pueden ejecutarse localmente. Esta decisión no implica que la herramienta forme parte obligatoriamente del ejecutable final, ya que su estrategia de distribución permanece sujeta a evaluación.
+
+\section{Alineación temporal mediante Dynamic Time Warping}
+
+Dos interpretaciones de una misma canción no presentan necesariamente la misma duración ni mantienen un tempo idéntico. El usuario puede adelantar o retrasar el inicio de una frase, prolongar una nota o modificar localmente la velocidad. Por esta razón, comparar las curvas de pitch únicamente mediante instantes coincidentes produciría diferencias que no corresponden a errores de afinación, sino a variaciones temporales.
+
+Dynamic Time Warping (DTW) es un procedimiento que permite alinear dos secuencias temporales aunque sus elementos equivalentes aparezcan en instantes diferentes. Para ello, busca una correspondencia de costo mínimo entre ambas secuencias y admite repeticiones o avances desiguales a lo largo de sus ejes temporales [15].
+
+\subsection{Matriz de costos}
+
+El proceso comienza construyendo una matriz cuyos elementos representan la diferencia entre cada observación de la referencia y cada observación de la interpretación. En el contexto del proyecto, esta diferencia puede calcularse a partir de frecuencias, notas o valores expresados en cents. Los valores reducidos indican pares tonalmente similares, mientras que los valores elevados representan una mayor separación.
+
+La selección de la medida de distancia influye directamente en el resultado. Trabajar con cents permite representar las diferencias de altura mediante una escala logarítmica y comparar de manera consistente notas pertenecientes a distintos registros. Los intervalos sin voz deben tratarse por separado para evitar que sean alineados como si contuvieran estimaciones tonales válidas.
+
+\subsection{Trayectoria de alineación}
+
+A partir de la matriz de costos, DTW determina una trayectoria que conecta el comienzo y el final de las secuencias. Cada punto de esta trayectoria vincula un instante de la referencia con uno de la interpretación. El costo acumulado se obtiene combinando la diferencia local con el mejor costo alcanzado desde las posiciones permitidas anteriormente [15].
+
+Las restricciones de continuidad y monotonía impiden retroceder en el tiempo, pero permiten que un elemento de una secuencia se relacione con varios elementos de la otra. La biblioteca librosa proporciona una implementación configurable de DTW que admite matrices de características, matrices de costo previamente calculadas y restricciones sobre la trayectoria [16].
+
+\subsection{Aplicación a curvas de pitch}
+
+En el sistema propuesto, la alineación se aplicará entre la curva de pitch vocal obtenida desde la canción de referencia y la curva registrada durante la interpretación. Una vez establecidas las correspondencias temporales, será posible calcular diferencias de afinación sobre instantes comparables y localizar segmentos donde estas diferencias se mantienen durante un intervalo significativo.
+
+La alineación temporal también ha sido utilizada en trabajos orientados a la corrección de canto, donde se busca relacionar una interpretación con una referencia antes de modificar su altura tonal [17]. En este proyecto no se pretende corregir el audio del usuario, sino utilizar la correspondencia como base para el análisis y la retroalimentación posterior.
+
+La Figura 2.5 muestra de manera simplificada cómo dos curvas con duraciones distintas pueden vincularse mediante una matriz de costos y una trayectoria de alineación.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image9.png}
+\caption{Alineación temporal de curvas de pitch mediante DTW. Fuente: elaboración propia.}
+\label{fig:2-5}
+\end{figure}
+
+\subsection{Limitaciones de la alineación}
+
+Una trayectoria demasiado flexible puede relacionar regiones que no corresponden musicalmente, ocultar omisiones o compensar desviaciones importantes. Por el contrario, restricciones excesivas pueden impedir la alineación de interpretaciones que contienen variaciones naturales de tempo. Además, los errores presentes en la estimación de pitch se trasladan a la matriz de costos y pueden desviar la trayectoria.
+
+DTW tampoco determina por sí mismo si una diferencia constituye un problema vocal. Su resultado debe combinarse con criterios de duración, magnitud, continuidad y contexto musical. Las pausas extensas, frases omitidas y regiones con baja confianza requerirán reglas específicas antes de generar un diagnóstico.
+
+\subsection{Criterios para el proyecto}
+
+La implementación conservará tanto la trayectoria como el costo de alineación, de modo que los resultados puedan revisarse y asociarse con los segmentos originales. Se evaluará el uso de restricciones que limiten deformaciones temporales excesivas y se excluirán los bloques que no posean una estimación tonal confiable.
+
+La alineación se realizará después de completar la grabación, ya que no es necesaria para mostrar la nota detectada en tiempo real. Esta separación permite mantener una respuesta inmediata durante el canto y reservar el análisis comparativo completo para la etapa posterior de procesamiento.
+
+\section{Detección y caracterización de segmentos problemáticos}
+
+Una métrica global resume el desempeño de una interpretación, pero no permite determinar dónde ocurrió una dificultad ni durante cuánto tiempo se mantuvo. Para entregar retroalimentación útil, el sistema debe conservar la dimensión temporal del análisis e identificar intervalos concretos donde las diferencias respecto de la referencia sean relevantes.
+
+Los trabajos de evaluación automática del canto han utilizado información como la exactitud de los intervalos de pitch y las características del vibrato para describir aspectos de una interpretación [18]. Asimismo, interfaces como MiruSinger han mostrado la utilidad de presentar visualmente el pitch estimado junto con una referencia musical [19]. Estos antecedentes respaldan el uso de evidencia tonal localizada, aunque la propuesta de este proyecto busca además agruparla y expresarla mediante observaciones comprensibles.
+
+\subsection{Evidencias locales de la interpretación}
+
+Después de la alineación temporal, cada bloque válido puede asociarse con indicadores locales. Entre ellos se encuentran la diferencia de afinación en cents, el signo de la desviación, la ausencia de voz cuando existe una referencia tonal y la variabilidad observada dentro de una región sostenida. También debe conservarse la confianza de la estimación para distinguir una posible dificultad del usuario de un error del procesamiento acústico.
+
+Una diferencia aislada no constituye necesariamente un problema. Los ataques de notas, el vibrato y las transiciones melódicas producen variaciones legítimas que podrían superar momentáneamente un umbral. Por ello, la detección debe considerar simultáneamente magnitud, duración, continuidad y contexto temporal.
+
+\subsection{Formación dinámica de segmentos}
+
+Los segmentos no se definirán mediante divisiones de duración fija. Se formarán agrupando observaciones consecutivas que presenten un comportamiento compatible, permitiendo pequeñas interrupciones cuando estas correspondan a estimaciones ausentes o transiciones breves. Cada segmento conservará su instante inicial, instante final y conjunto de evidencias asociadas.
+
+Como alternativa para detectar cambios entre comportamientos temporales, existen métodos de detección de puntos de cambio que dividen una señal cuando sus propiedades estadísticas varían. La literatura distingue aproximaciones basadas en costos, búsqueda y penalizaciones, cuya selección depende de las características de la serie analizada [20]. En este proyecto estos métodos se consideran como una posibilidad de refinamiento, no como una decisión de implementación ya establecida.
+
+\subsection{Caracterización de problemáticas}
+
+Una vez delimitado un segmento, el sistema deberá caracterizar lo ocurrido mediante categorías sustentadas por los datos disponibles. Entre las problemáticas inicialmente consideradas se encuentran la afinación predominantemente baja o alta, la oscilación tonal excesiva, la pérdida de estabilidad en notas sostenidas, la entrada tardía o adelantada y la ausencia parcial de voz respecto de la referencia.
+
+Estas categorías deberán validarse durante el desarrollo y podrán ajustarse si no existe evidencia suficiente para distinguirlas de manera confiable. En particular, el sistema no inferirá causas fisiológicas, técnicas vocales específicas ni condiciones clínicas a partir de una grabación. La salida describirá el comportamiento acústico observado y su relación con la referencia.
+
+\subsection{Severidad y priorización}
+
+La severidad de un segmento puede estimarse combinando la magnitud de la diferencia, su duración, persistencia y nivel de confianza. La prioridad, en cambio, también debe considerar la recurrencia del comportamiento y su relevancia dentro de la interpretación. De esta forma, una desviación breve pero extrema no necesariamente desplazará a una dificultad moderada que se repite durante varias frases.
+
+La priorización permitirá seleccionar un número acotado de hallazgos para la retroalimentación. Con ello se evita presentar al usuario una lista extensa de pequeñas desviaciones y se concentra la atención en los segmentos que ofrecen mayor utilidad para una práctica posterior.
+
+La Figura 2.6 resume el proceso que transforma las diferencias locales en segmentos caracterizados y priorizados.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image10.png}
+\caption{Proceso de detección, caracterización y priorización de segmentos problemáticos. Fuente: elaboración propia.}
+\label{fig:2-6}
+\end{figure}
+
+\subsection{Criterios para el proyecto}
+
+Los umbrales y criterios iniciales deberán tratarse como parámetros ajustables y validarse con grabaciones de prueba. Cada segmento almacenará la evidencia numérica que justificó su clasificación, permitiendo revisar el resultado y modificar los criterios sin perder trazabilidad.
+
+La detección producirá una representación estructurada independiente del mecanismo utilizado posteriormente para redactar la retroalimentación. Esta separación permitirá generar mensajes mediante plantillas o mediante un modelo de lenguaje sin delegar al generador textual la identificación de los problemas acústicos.
+
+\section{Generación de retroalimentación en lenguaje natural}
+
+La retroalimentación corresponde a la transformación de los resultados técnicos en observaciones que el usuario pueda comprender y relacionar con su interpretación. Su finalidad no es reemplazar la evaluación de un docente de canto, sino comunicar de manera clara los segmentos detectados, la evidencia disponible y los aspectos que podrían revisarse durante una nueva práctica.
+
+La generación de lenguaje natural comprende tareas que convierten datos o representaciones internas en texto. Este proceso suele incluir la selección del contenido, su organización y su realización lingüística [21]. En el proyecto, estas etapas deben permanecer vinculadas con los hallazgos producidos por el análisis acústico.
+
+\subsection{Representación estructurada de hallazgos}
+
+Antes de redactar un mensaje, cada hallazgo deberá representarse mediante campos verificables: canción, intervalo temporal, categoría, severidad, confianza, métricas relevantes y relación con la referencia. Esta estructura constituye el contrato entre el módulo de análisis y el mecanismo de generación textual.
+
+La separación impide que el componente de lenguaje modifique silenciosamente los resultados. También permite mostrar la misma evidencia mediante gráficos, tablas o mensajes y facilita comparar la salida producida por distintos generadores.
+
+\subsection{Generación mediante plantillas}
+
+Las plantillas combinan expresiones previamente definidas con valores obtenidos desde los segmentos. Su principal ventaja es la previsibilidad: para una misma entrada producen mensajes equivalentes y no agregan información que no se encuentre en las reglas. Además, pueden ejecutarse localmente con un costo reducido.
+
+Como limitación, un conjunto de plantillas puede producir textos repetitivos y requiere anticipar las combinaciones posibles entre hallazgos. A medida que aumenta la cantidad de categorías, prioridades y relaciones entre sesiones, mantener mensajes naturales mediante reglas puede volverse más complejo.
+
+\subsection{Generación mediante un modelo de lenguaje}
+
+Un modelo de lenguaje puede recibir los hallazgos estructurados y redactar una explicación más contextual, agrupar observaciones relacionadas y adaptar el nivel de detalle. Existen familias de modelos con pesos disponibles que permiten estudiar su ejecución local [23], junto con herramientas como llama.cpp orientadas a realizar inferencia en equipos de uso general [24].
+
+La ejecución local evitaría enviar grabaciones o resultados a un servicio externo, pero exige considerar tamaño del modelo, memoria, tiempo de respuesta, licencia y complejidad de distribución. Una alternativa remota simplificaría parte de la instalación, aunque introduciría conectividad, costos de uso y tratamiento de datos. La selección entre plantillas, modelo local o servicio remoto permanece sujeta a evaluación.
+
+\subsection{Riesgos y validación}
+
+Los modelos de lenguaje pueden producir afirmaciones plausibles que no se encuentran respaldadas por la entrada, comportamiento estudiado como alucinación en la generación de texto [22]. En este proyecto, una afirmación inventada podría atribuir al usuario una causa técnica o fisiológica que el análisis no puede demostrar.
+
+Para reducir este riesgo, la entrada deberá limitarse a los hallazgos seleccionados, la salida utilizará un formato definido y se verificará que los tiempos, categorías y magnitudes mencionados correspondan con los datos originales. También se restringirán diagnósticos clínicos, juicios absolutos y recomendaciones que excedan el alcance del sistema.
+
+La Figura 2.7 representa las dos alternativas de generación y la validación común que debe aplicarse antes de presentar el mensaje.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image11.png}
+\caption{Generación y validación de retroalimentación en lenguaje natural. Fuente: elaboración propia.}
+\label{fig:2-7}
+\end{figure}
+
+\subsection{Criterios para el proyecto}
+
+La primera implementación podrá utilizar plantillas como mecanismo base y referencia de comportamiento. La incorporación de un modelo de lenguaje se considerará si mejora de manera comprobable la claridad sin reducir la fidelidad respecto de los datos. En ambos casos, el mensaje deberá indicar qué ocurrió, en qué segmento se observó y qué evidencia sustenta la observación.
+
+La generación se ejecutará después del análisis de la grabación y no formará parte del flujo de detección de nota en tiempo real. El resultado estructurado se conservará junto con el texto, permitiendo regenerar la retroalimentación o auditarla posteriormente.
+
+\section{Seguimiento y comparación de la evolución}
+
+Una sesión aislada permite reconocer dificultades puntuales, pero no informa si estas disminuyen, persisten o cambian con la práctica. El seguimiento histórico utilizará los resultados almacenados para comparar interpretaciones realizadas en fechas diferentes y presentar su evolución.
+
+\subsection{Persistencia de sesiones}
+
+Cada sesión deberá mantener una relación con la canción y la referencia utilizadas, además de su fecha, grabación, métricas, segmentos y retroalimentación. Conservar estos elementos permite volver al audio original, verificar un hallazgo y aplicar en el futuro criterios de análisis actualizados.
+
+Los datos derivados no sustituyen a la grabación. Una modificación del estimador de pitch, de la alineación o de los umbrales puede cambiar el resultado; por ello, el sistema deberá distinguir los archivos originales de los resultados calculados y registrar la versión o configuración relevante del procesamiento.
+
+\subsection{Comparabilidad entre sesiones}
+
+La comparación se limitará a sesiones correspondientes a una misma canción y referencia. Esta condición reduce diferencias originadas por melodías, rangos o duraciones distintas. Las métricas deberán calcularse mediante configuraciones equivalentes y se informará cuando una sesión no posea suficiente información tonal para ser comparable.
+
+Además de observar la variación de métricas globales, se analizará la recurrencia de categorías y su ubicación aproximada dentro de la canción. Debido a que los límites de un segmento pueden variar entre interpretaciones, la comparación deberá apoyarse en la alineación temporal y no exigir coincidencias exactas de inicio y término.
+
+\subsection{Resumen de cambios}
+
+El resumen histórico distinguirá aspectos que mejoraron, persistieron o empeoraron. Una mejora puede reflejar una reducción de la magnitud o duración de un problema, mientras que la persistencia indica que una categoría continúa apareciendo en regiones comparables. Estas etiquetas se acompañarán con los valores que justifican el cambio.
+
+La visualización deberá evitar presentar pequeñas fluctuaciones como progreso concluyente. Cuando las diferencias se encuentren dentro de un margen definido o la confianza sea insuficiente, el sistema las tratará como cambios no concluyentes.
+
+La Figura 2.8 ilustra una secuencia de sesiones comparables y la evolución de una métrica a lo largo del tiempo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image12.png}
+\caption{Seguimiento de la evolución entre sesiones de una misma canción. Fuente: elaboración propia.}
+\label{fig:2-8}
+\end{figure}
+
+\subsection{Criterios para el proyecto}
+
+La comparación histórica constituirá una función posterior al análisis individual. Inicialmente se priorizará la selección de dos sesiones y, posteriormente, una vista cronológica que resuma varias interpretaciones. La implementación deberá permitir incorporar nuevas métricas sin invalidar las sesiones almacenadas.
+
+\section{Tecnologías consideradas}
+
+Las tecnologías del proyecto deben permitir procesamiento local de audio, interacción de escritorio y conservación de resultados. La selección definitiva de algunos componentes permanece abierta, por lo que esta sección distingue las herramientas utilizadas en el prototipo de las alternativas consideradas para la versión final.
+
+\subsection{Lenguaje y procesamiento de audio}
+
+El prototipo se encuentra desarrollado en Python, lenguaje que dispone de documentación y un ecosistema amplio de bibliotecas científicas [25]. librosa se utiliza para carga, transformación y análisis de audio; Pyworld proporciona acceso a procedimientos de WORLD; y Demucs realiza la separación de fuentes mediante modelos preentrenados. NumPy y SciPy apoyan las operaciones numéricas requeridas por estas etapas.
+
+La detección durante el canto deberá ejecutarse sobre bloques breves y entregar únicamente la nota estimada a la interfaz. Los procesos de mayor costo, como separación, alineación completa, detección de segmentos y generación textual, se realizarán fuera de ese ciclo para evitar bloqueos y latencia perceptible.
+
+\subsection{Interfaz gráfica}
+
+La interfaz actual utiliza Tkinter, biblioteca incluida con Python y basada en Tcl/Tk [26]. Esta elección permitió implementar el flujo funcional del prototipo con pocas dependencias adicionales. Sin embargo, sus posibilidades de diseño y componentes pueden resultar limitadas para la presentación final esperada.
+
+Qt for Python constituye una alternativa para desarrollar una interfaz de escritorio con componentes más flexibles y una apariencia visual más elaborada [27]. La migración deberá evaluarse considerando tiempo de desarrollo, facilidad de distribución y reutilización de la lógica existente. Debido a la separación modular del proyecto, el cambio de interfaz no debería modificar los módulos responsables del análisis de audio.
+
+\subsection{Almacenamiento}
+
+El prototipo conserva canciones, grabaciones, archivos CSV y resultados JSON en el sistema de archivos. Este mecanismo es suficiente para inspeccionar los datos y mantener trazabilidad durante el desarrollo. A medida que aumenten las sesiones, consultar relaciones entre canciones, fechas, métricas y segmentos mediante archivos individuales puede resultar menos conveniente.
+
+SQLite ofrece una base de datos autocontenida que opera directamente sobre un archivo y no requiere un servidor independiente [28]. Puede utilizarse para indexar canciones, sesiones, métricas y segmentos, mientras los audios permanecen como archivos. La adopción de SQLite se mantiene como decisión pendiente y dependerá de la complejidad alcanzada por el seguimiento histórico.
+
+\subsection{Distribución y dependencias}
+
+Durante el desarrollo, la aplicación se ejecuta como código Python con sus dependencias instaladas. Herramientas como PyInstaller permiten empaquetar una aplicación y sus módulos para ejecutarla sin que el usuario instale Python por separado [29]. No obstante, el tamaño de bibliotecas científicas, modelos de separación y posibles modelos de lenguaje puede aumentar considerablemente el paquete.
+
+La distribución final podrá utilizar un ejecutable principal acompañado por recursos o dependencias instalables, en lugar de incorporar todos los modelos dentro de un único archivo. Demucs y un eventual modelo de lenguaje podrían descargarse durante la instalación, mantenerse como componentes externos o excluirse de una versión reducida. La estrategia se definirá después de medir tamaño, compatibilidad y tiempos de ejecución en el entorno objetivo.
+
+\subsection{Criterios para el proyecto}
+
+Se conservará Python para el procesamiento mientras permita cumplir los requisitos de latencia y distribución. La interfaz, el almacenamiento, el mecanismo de generación textual y el empaquetado se evaluarán como decisiones independientes. Esta separación evita que una elección pendiente bloquee el desarrollo de la contribución principal, centrada en el análisis segmentado y la retroalimentación.
+
+\section{Trabajo relacionado}
+
+Los trabajos relacionados combinan evaluación automática, visualización, alineación y procesamiento de grabaciones musicales, aunque no todos persiguen el mismo propósito. El Cuadro 2.1 resume los antecedentes más próximos a los componentes centrales de la propuesta.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Comparación de trabajos relacionados con la propuesta. Fuente: elaboración propia.}
+\label{tab:2-1}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Trabajo & Enfoque & Salida principal & Relación con la propuesta \\
+\hline
+Nakano et al. (2006) [18] & Exactitud de intervalos de pitch y características de vibrato. & Evaluación automática de habilidad de canto. & Fundamenta el uso de características tonales; la propuesta agrega segmentos y trazabilidad. \\
+\hline
+MiruSinger (2007) [19] & Comparación visual con grabaciones musicales de referencia. & Visualización de pitch y retroalimentación en tiempo real. & Se relaciona con la nota en tiempo real; la propuesta añade análisis posterior e historial. \\
+\hline
+Luo et al. (2018) [17] & Alineación temporal entre una interpretación y una referencia. & Corrección de la voz cantada. & Comparte la necesidad de alineación, pero la propuesta analiza y no modifica la voz. \\
+\hline
+Demucs y HT Demucs [12], [13] & Separación de fuentes musicales mediante aprendizaje profundo. & Pistas vocales e instrumentales separadas. & Proporciona la referencia vocal y el acompañamiento utilizados por el sistema. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Diferenciación de la propuesta}
+
+Los antecedentes revisados muestran soluciones para medir características del canto, visualizar una trayectoria tonal, alinear interpretaciones o preparar las fuentes musicales. La propuesta integra estas capacidades dentro de un flujo orientado a la práctica individual: preparación de la canción, detección de nota durante el canto, análisis posterior, localización de problemas y conservación de sesiones.
+
+Su principal diferenciación prevista es que la retroalimentación no dependerá únicamente de un puntaje o de la inspección manual de un gráfico. El sistema buscará identificar intervalos variables donde ocurre un comportamiento relevante, conservar la evidencia que lo sustenta y comunicarlo mediante lenguaje natural. Además, la comparación histórica permitirá observar si estos comportamientos cambian al repetir una misma canción.
+
+Estas capacidades corresponden a objetivos de desarrollo y deberán validarse experimentalmente. La revisión de trabajos relacionados no permite asumir por sí sola que la retroalimentación será correcta o útil; dichas propiedades deberán evaluarse con datos y usuarios durante las etapas posteriores del proyecto.
+
+\section{Síntesis del capítulo}
+
+El capítulo presentó los conceptos necesarios para representar la altura tonal, procesar señales de audio, estimar frecuencia fundamental, separar fuentes musicales y alinear temporalmente una interpretación con su referencia. Sobre esta base se definió un enfoque para detectar segmentos problemáticos a partir de evidencias locales y transformarlos en retroalimentación trazable.
+
+También se establecieron los criterios para comparar sesiones y observar la evolución del usuario. Finalmente, se revisaron las tecnologías utilizadas o consideradas y se relacionó la propuesta con antecedentes de evaluación, visualización, alineación y separación musical. Estos fundamentos orientan la especificación y el diseño que se desarrollarán en los capítulos siguientes.
+
+\chapter{Metodología}
+
+La metodología del proyecto debe responder a una dificultad concreta: no basta con implementar una secuencia de pantallas, porque el valor del sistema depende de que varias decisiones acústicas produzcan resultados defendibles. La separación de una canción puede dejar artefactos; un estimador de frecuencia fundamental puede perder bloques o saltar de octava; DTW puede alinear regiones incorrectas; y una redacción fluida puede ser incoherente con las métricas. Por esta razón, el trabajo se organiza en incrementos cuyo cierre exige evidencia técnica, además de funcionamiento visible.
+
+El capítulo describe una adaptación de Personal Extreme Programming (PXP) al desarrollo individual de software experimental de audio. La adaptación integra requisitos, historias de usuario, hipótesis técnicas, artefactos reproducibles y criterios de aceptación. También define cómo se evaluarán la estimación de pitch, la latencia, la alineación, los segmentos y la fidelidad de la retroalimentación.
+
+\section{Estrategia metodológica}
+
+\subsection{Adaptación de PXP al proyecto}
+
+PXP fue seleccionado porque permite que una sola persona mantenga planificación, registro de esfuerzo, iteraciones breves, pruebas y refactorización. Su flexibilidad resulta pertinente cuando una prueba técnica puede invalidar una decisión previa. Por ejemplo, una biblioteca puede extraer pitch con buena cobertura fuera de línea, pero no cumplir la latencia requerida durante la captura. En ese caso, la iteración no se cierra por haber integrado la biblioteca; se reabre la hipótesis y se prueba otra configuración o estrategia [30].
+
+La unidad de avance no será solamente una historia de usuario terminada. Cada incremento deberá vincular: a) un requisito o riesgo; b) una hipótesis técnica; c) una modificación identificable del sistema; d) audios o datos de prueba; e) una medición; y f) una decisión de aceptación o ajuste. Esta regla busca evitar que una función aparezca completa en la interfaz mientras su comportamiento acústico continúa sin validar.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image13.png}
+\caption{Iteración orientada por evidencia técnica. Fuente: elaboración propia.}
+\label{fig:3-1}
+\end{figure}
+
+\subsection{Evidencia de aceptación por capacidad}
+
+Los 45 requisitos se mantienen en sus fichas individuales, pero dentro de la metodología se agrupan por capacidad y por evidencia necesaria. Esta integración evita repetir las especificaciones y permite observar qué impide realmente cerrar cada grupo. El Cuadro 3.1 diferencia la evidencia disponible al finalizar el primer semestre de la evidencia que aún falta producir.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Evidencia requerida para aceptar las capacidades principales. Fuente: elaboración propia.}
+\label{tab:3-1}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Capacidad & Requisitos & Evidencia actual & Condición para cerrar \\
+\hline
+Preparación de canciones & RF01–RF06 & metadata.json, stems de Demucs, instrumental.wav y ref\_pitch.csv. & Probar reutilización, reprocesamiento y error de separación con audios distintos. \\
+\hline
+Sesión de canto & RF07–RF15 & Reproducción y grabación mono a 44,1 kHz; WAV fechado; cursor de referencia. & Sustituir análisis posterior por captura de bloques y demostrar latencia inferior a 150 ms. \\
+\hline
+Comparación & RF16–RF17 & DTW inicial y JSON con error, dispersión, tendencia y tolerancias. & Validar la trayectoria, medir en escala tonal y conservar correspondencias temporales. \\
+\hline
+Segmentos & RF18–RF20 & Modelo conceptual y métricas locales definidas. & Comparar segmentos detectados con intervalos anotados y justificar categorías. \\
+\hline
+Retroalimentación & RF21–RF23 & Contrato conceptual de hallazgos estructurados. & Verificar que cada afirmación corresponda con tiempos, categoría y evidencia guardada. \\
+\hline
+Evolución & RF27–RF29 & Dos grabaciones y resultados asociados con una misma canción. & Versionar referencia y configuración antes de comparar mejoras o persistencias. \\
+\hline
+\end{tabularx}
+\end{table}
+
+Los requisitos transversales se comprueban en los mismos incrementos. RNF05 fija una latencia objetivo inferior a 150 ms; RNF10 exige mantener grabaciones locales salvo autorización; RNF11 y RNF12 obligan a conservar la relación entre mensajes y evidencia; y RNF14 exige detectar fallas de Demucs o de un posible LLM. Por tanto, estos requisitos no se validarán en una etapa separada al final, sino como condiciones de aceptación de las funciones relacionadas.
+
+\subsection{Dependencias entre iteraciones}
+
+La secuencia de iteraciones responde a dependencias de información. No es posible detectar segmentos antes de conservar una alineación temporal; no es posible generar retroalimentación explicable antes de estructurar esos segmentos; y no es válido comparar la evolución si dos sesiones fueron procesadas con referencias o configuraciones incompatibles. La planificación prioriza estas dependencias por sobre una distribución uniforme de funciones.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Dependencias y puertas de salida de las iteraciones. Fuente: elaboración propia.}
+\label{tab:3-2}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Iteración & Pregunta que debe responder & Incremento & Puerta de salida \\
+\hline
+1. Preparación & ¿Puede una canción convertirse en referencia y acompañamiento reutilizables? & Catálogo, Demucs, instrumental y pitch filtrado. & Artefactos persistentes y reprocesables. \\
+\hline
+2. Captura & ¿Puede registrarse una interpretación sincronizada sin bloquear la aplicación? & playrec, WAV, cursor y comparación posterior. & Flujo completo estable; tiempo real queda como deuda explícita. \\
+\hline
+3A. Tiempo real & ¿Puede estimarse una nota dentro de 150 ms durante toda la canción? & InputStream, bloques, confianza y estabilización. & Distribución de latencia y tasa de bloques válidos. \\
+\hline
+3B. Análisis & ¿La comparación conserva correspondencias suficientemente confiables? & DTW en cents, trayectoria, métricas locales y segmentos. & Acuerdo con intervalos revisados manualmente. \\
+\hline
+4. Comunicación & ¿Los hallazgos pueden explicarse y compararse sin inventar información? & Plantillas/LLM, persistencia versionada e historial. & Trazabilidad completa y aceptación de usuarios. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Tratamiento de decisiones abiertas}
+
+La interfaz gráfica, SQLite, el ejecutable y el LLM no se tratarán como un único paquete de decisiones. Cada alternativa responde a un problema diferente y tendrá un experimento acotado. La interfaz se decidirá según esfuerzo de migración y capacidad de presentar gráficos y segmentos; SQLite se evaluará según complejidad de consultas históricas; PyInstaller según tamaño y reproducibilidad; y el LLM según fidelidad, recursos y privacidad.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Decisiones abiertas y criterios de resolución. Fuente: elaboración propia.}
+\label{tab:3-3}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Decisión & Alternativas & Criterios & Momento de resolución \\
+\hline
+Interfaz & Mantener Tkinter o migrar a Qt for Python. & Reutilización de lógica, gráficos, esfuerzo y distribución. & Después de estabilizar contratos del análisis. \\
+\hline
+Persistencia & Archivos estructurados o SQLite + archivos de audio. & Versionado, consultas, integridad y migración. & Antes de implementar historial. \\
+\hline
+Retroalimentación & Plantillas, LLM local o servicio remoto. & Fidelidad, latencia, memoria, privacidad y licencia. & Después de validar segmentos. \\
+\hline
+Distribución & Proyecto Python o paquete PyInstaller. & Tamaño, dependencias nativas, modelos y repetibilidad. & Cuando la tecnología final esté cerrada. \\
+\hline
+Diagnóstico & Herramienta visible o función interna. & Utilidad para explicar filtrado y costo de mantenimiento. & Después de las pruebas de pitch. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Diseño de evaluación}
+
+\subsection{Conjunto de pruebas}
+
+Un único tipo de audio no permite atribuir correctamente los errores. Se utilizarán cuatro estratos de prueba. Las señales controladas permiten conocer la nota y el tiempo esperados; las voces aisladas permiten evaluar el estimador sin acompañamiento; las interpretaciones reales permiten observar variaciones naturales; y las condiciones degradadas permiten comprobar que el sistema prefiera informar datos insuficientes antes que entregar resultados engañosos.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Estratos del conjunto de pruebas. Fuente: elaboración propia.}
+\label{tab:3-4}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Estrato & Contenido & Uso & Variable controlada \\
+\hline
+A. Sintético & Tonos, escalas, silencios y cambios de nota generados. & Precisión de F0, saltos de octava y latencia. & Frecuencia, inicio, duración y amplitud. \\
+\hline
+B. Voz limpia & Fragmentos vocales o stems sin acompañamiento. & Cobertura y estabilidad del estimador. & Ruido y filtración instrumental reducidos. \\
+\hline
+C. Canto real & Repeticiones de una misma canción por sesión. & DTW, segmentos, retroalimentación e historial. & Canción y referencia compartidas. \\
+\hline
+D. Condición degradada & Ruido moderado, silencios, baja energía y filtración. & Robustez y manejo de datos insuficientes. & Nivel y tipo de degradación. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Experimento de estimación y filtrado de pitch}
+
+La evaluación separará el estimador crudo del filtrado posterior. Para cada archivo se registrará la cantidad de puntos crudos, puntos conservados, error en cents respecto de la referencia conocida y regiones donde se perdieron notas. La conservación por sí sola no implica calidad: mantener muchos puntos ruidosos puede empeorar el análisis, mientras que un filtro demasiado agresivo puede eliminar ataques y notas breves.
+
+Los parámetros actuales —rango A1–C7, umbral RMS, relleno de huecos de hasta cinco marcos, duración mínima de dos marcos, mediana de siete marcos y rechazo de saltos superiores a nueve semitonos— se tratarán como una configuración inicial. Se compararán configuraciones sin modificar varias variables simultáneamente y se almacenará la versión utilizada. También deberá unificarse el rango del filtro con el fallback pYIN, que actualmente comienza en C2.
+
+\subsection{Experimento de detección en tiempo real}
+
+El prototipo actual utiliza sounddevice.playrec y analiza el WAV al finalizar; por tanto, no constituye evidencia de RF10–RF12. La prueba de tiempo real requiere una captura basada en callback o InputStream. Cada bloque conservará el instante de entrada, el instante en que se obtiene F0 y el instante en que la nota queda disponible para la presentación.
+
+La latencia se calculará desde la disponibilidad del bloque hasta la salida estabilizada. Se informarán mediana, percentil 95 y máximo, además de la proporción de bloques que cumplen 150 ms. También se medirá continuidad durante una canción completa y se observará si la cola de procesamiento crece. El requisito se aceptará únicamente si la nota permanece disponible sin interrupciones perceptibles y la distribución respalda RNF05 y RNF07.
+
+\subsection{Experimento de alineación y segmentación}
+
+La implementación actual ejecuta DTW directamente sobre frecuencias en Hz y utiliza la trayectoria solo para calcular errores. El experimento comparará este comportamiento con una distancia calculada en cents o MIDI, debido a que una diferencia en Hz no representa el mismo intervalo en registros distintos. Para un subconjunto de canciones se marcarán manualmente inicios de frases o notas, y se revisará si la trayectoria relaciona regiones equivalentes.
+
+Una vez validada la trayectoria, se anotarán intervalos con desviación sostenida, ausencia de voz o inestabilidad. Los segmentos automáticos se compararán mediante solapamiento temporal, precisión, exhaustividad y error en sus límites. Los umbrales de magnitud y duración se fijarán después de una prueba piloto; no se establecerán solo para obtener una cantidad conveniente de hallazgos.
+
+\subsection{Evaluación de retroalimentación e historial}
+
+Cada mensaje se evaluará contra el registro estructurado que lo originó. Los tiempos, magnitudes y categorías mencionados deberán coincidir; una recomendación no podrá atribuir causas respiratorias, fisiológicas o clínicas. Para un eventual LLM se repetirá la misma entrada varias veces con el fin de detectar variabilidad y se comparará su salida con una plantilla determinista.
+
+La evaluación con usuarios distinguirá comprensión de corrección. Primero se preguntará si el usuario puede localizar el segmento y explicar qué observó el sistema; después, una revisión experta podrá valorar si la categoría acústica es razonable. La comparación histórica se probará solo con sesiones que compartan identificador y versión de referencia, configuración de análisis y canción.
+
+\subsection{Pruebas funcionales y regresión}
+
+Las pruebas funcionales se derivarán de las fichas de requisitos y se conservarán como regresión. Un flujo exitoso no será suficiente: deben incluirse canciones duplicadas, archivos incompatibles, stems ausentes, micrófono no disponible, grabaciones sin pitch, DTW sin puntos comparables, resultados antiguos y fallas de componentes externos.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Casos funcionales críticos y comportamiento esperado. Fuente: elaboración propia.}
+\label{tab:3-5}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Caso crítico & Riesgo & Comportamiento exigido \\
+\hline
+Demucs falla o no está instalado. & Canción marcada falsamente como preparada. & No activar preparada; conservar error y permitir reintento. \\
+\hline
+El micrófono no entrega datos. & WAV vacío o bloqueo de interfaz. & Detener la sesión, informar y volver a estado estable. \\
+\hline
+No existe pitch suficiente. & Métricas aparentemente precisas sin evidencia. & Resultado 'sin datos' y cero puntos comparados. \\
+\hline
+Se reprocesa la referencia. & Historial incompatible silenciosamente. & Crear nueva versión o marcar sesiones no comparables. \\
+\hline
+El generador textual falla. & Pérdida de resultados acústicos. & Conservar hallazgos y usar plantilla o mensaje controlado. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Reproducibilidad y registro}
+
+Cada ejecución experimental deberá registrar archivo de entrada, canción, fecha, versión de referencia, estimador utilizado, parámetros del filtro, versión del algoritmo de alineación y código del experimento. Los audios originales no se sobrescribirán. Los resultados derivados podrán regenerarse, pero deberán conservar un identificador de configuración para evitar comparaciones entre procesos distintos.
+
+\section{Estado metodológico actual}
+
+La primera mitad del proyecto demuestra el flujo de preparación y una comparación completa posterior a la sesión. También ofrece una herramienta que cuantifica cuántos puntos de pitch sobreviven al filtrado. Sin embargo, estos artefactos constituyen evidencia de integración, no una validación de precisión general. La siguiente puerta metodológica es demostrar captura por bloques y decidir una representación de alineación que pueda sostener segmentos temporales.
+
+El avance de 35,6 \% se conserva como medida administrativa basada en requisitos completados. Para las iteraciones siguientes se complementará con evidencia por capacidad, porque dos requisitos pueden demandar esfuerzos y riesgos muy diferentes.
+
+\section{Amenazas a la validez}
+
+Las principales amenazas son la cantidad limitada de voces, el sesgo introducido por la separación de la canción original, la variación entre micrófonos y habitaciones, y la ausencia inicial de anotaciones expertas. También existe riesgo de ajustar umbrales a pocas grabaciones del desarrollador. Para reducirlo, se separarán datos de ajuste y prueba, se documentarán condiciones acústicas y se evitará presentar una métrica global como diagnóstico completo de calidad vocal.
+
+\section{Síntesis del capítulo}
+
+La versión metodológica propuesta convierte PXP en un ciclo de hipótesis, incremento, prueba y decisión. Los requisitos se integran mediante evidencia concreta y puertas de salida, mientras las decisiones abiertas se resuelven después de estabilizar sus dependencias. El diseño de evaluación separa estimación, tiempo real, alineación, segmentación, redacción e historial para que los errores puedan atribuirse al componente correspondiente.
+
+\chapter{Desarrollo}
+
+El desarrollo actual no corresponde todavía a la arquitectura objetivo completa. Existe un flujo local capaz de preparar una canción, grabar una interpretación, extraer pitch, alinear secuencias y guardar métricas; sin embargo, la nota se calcula después de grabar, la trayectoria DTW no se conserva y las sesiones no registran versiones de referencia. Este capítulo describe el sistema a partir de esa realidad, separando lo implementado de las extensiones necesarias.
+
+\section{Arquitectura derivada del entorno de ejecución}
+
+\subsection{Despliegue físico}
+
+El prototipo se ejecuta en Windows como un proceso Python iniciado desde app.py. Tkinter atiende eventos y utiliza hilos daemon para que la separación, el reprocesamiento y la grabación no bloqueen el ciclo gráfico. La captura y reproducción se realizan en el mismo equipo mediante sounddevice; la pista instrumental se remuestrea a 44,1 kHz y el micrófono se registra en un canal float32.
+
+Demucs se ejecuta como subproceso. Cuando existe el entorno incluido en el proyecto, el comando utiliza py -3.10 -m demucs y añade sus site-packages al PYTHONPATH; en otro caso emplea el intérprete activo. Esta diferencia explica por qué empaquetar la aplicación no consiste únicamente en convertir app.py a ejecutable: el proceso externo, los modelos, PyTorch y las bibliotecas nativas de audio también deben resolverse.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image14.png}
+\caption{Arquitectura física de ejecución local. Fuente: elaboración propia.}
+\label{fig:4-1}
+\end{figure}
+
+\subsection{Arquitectura lógica actual}
+
+La arquitectura existente está organizada en módulos Python, aunque app.py todavía conoce directamente numerosas operaciones. catalogo.py controla el ciclo de vida de una canción; separacion.py prepara stems; pitch.py estima y filtra F0; karaoke.py coordina reproducción, captura y análisis posterior; comparacion.py ejecuta DTW; metricas.py resume errores; guardar.py escribe la referencia; y visualizacion.py transforma frecuencias a notas MIDI para los gráficos.
+
+La Figura 4.2 representa dos líneas. La línea continua muestra los módulos existentes o parciales. La discontinua muestra las extensiones que deben incorporarse: captura por bloques, conservación de una trayectoria tonal, segmentos verificables, retroalimentación controlada e historial versionado. Esta distinción evita que la arquitectura objetivo sea interpretada como implementación terminada.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image15.png}
+\caption{Arquitectura lógica actual y extensiones pendientes. Fuente: elaboración propia.}
+\label{fig:4-2}
+\end{figure}
+
+\subsection{Flujos de ejecución}
+
+El sistema posee dos flujos principales. El primero prepara una canción: se genera un identificador a partir del título y un sufijo UUID, se copia el audio al catálogo, se crea metadata.json, se ejecuta HT Demucs, se suman drums, bass y other para producir instrumental.wav, se extrae pitch desde vocals.wav y se escribe ref\_pitch.csv. Si los stems existen y no se fuerza el reprocesamiento, se reutilizan.
+
+El segundo flujo comienza al cantar. karaoke.py carga el instrumental a 44,1 kHz, ejecuta playrec y consulta cada 100 ms si terminó la pista o se solicitó detener. El WAV se recorta a la duración registrada. Después se extrae el pitch del usuario, se limita la referencia a esa duración, se ejecuta DTW y se guarda un JSON junto al WAV. El cursor que avanza durante la canción representa tiempo de reproducción; no es todavía una nota detectada en tiempo real.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Flujos y artefactos producidos por el prototipo. Fuente: elaboración propia.}
+\label{tab:4-1}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Flujo & Entrada & Procesamiento & Artefactos \\
+\hline
+Preparación & Archivo WAV, MP3, FLAC, OGG o M4A; título y artista. & Catálogo → Demucs → mezcla instrumental → F0 → filtrado. & metadata.json, vocals.wav, instrumental.wav y ref\_pitch.csv. \\
+\hline
+Sesión & Canción preparada, micrófono y señal de detención. & playrec → WAV → F0 → DTW → métricas → gráfico. & usuario\_<fecha>.wav y usuario\_<fecha>\_resultado.json. \\
+\hline
+Diagnóstico & Voz separada y grabación reciente opcional. & F0 crudo → filtro → comparación de cobertura. & Conteo, porcentaje y curvas crudo/filtrado en memoria. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Modelo de datos}
+
+El modelo definitivo deberá distinguir datos de origen, datos derivados y versiones de procesamiento. Canción representa la identidad estable; Referencia representa una preparación concreta de esa canción; Sesión utiliza una versión de referencia; Resultado utiliza una versión de análisis; y Segmento conserva evidencia y límites temporales. Esta distinción es necesaria porque regenerar ref\_pitch.csv modifica actualmente la referencia en el mismo archivo y podría volver incomparables resultados antiguos sin dejar registro.
+
+El diagrama elaborado por el autor deberá considerar al menos Canción, Referencia, Sesión, Resultado, Métrica, Segmento y Retroalimentación, además de los identificadores de configuración. Los audios pueden mantenerse fuera de SQLite y relacionarse mediante rutas. Se reserva el siguiente espacio para incorporar ese modelo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth,height=0.72\textheight,keepaspectratio]{figuras/image16.png}
+\caption{Modelo de datos del sistema. Fuente: elaboración propia.}
+\label{fig:4-3}
+\end{figure}
+
+\section{Implementación y decisiones actuales}
+
+\subsection{Identidad y ciclo de una canción}
+
+catalogo.py crea identificadores con un slug del título y ocho caracteres de UUID. Esta decisión permite repetir títulos sin colisionar dentro de canciones/. metadata.json conserva id, título, artista, rutas de original, vocals, instrumental y pitch de referencia, fecha de creación y estado preparada. Eliminar una canción también elimina sus grabaciones y la salida asociada de Demucs.
+
+Las rutas son relativas al directorio de ejecución. Esto simplifica el prototipo, pero el ejecutable deberá resolver un directorio de datos estable y con permisos de escritura. También deberá decidirse si eliminar una canción borra definitivamente las sesiones o si existe una papelera, ya que el comportamiento actual no es reversible.
+
+\subsection{Separación y construcción del acompañamiento}
+
+separacion.py espera cuatro stems de HT Demucs [13]. vocals se utiliza como referencia; drums, bass y other se cargan con librosa y se suman para producir instrumental.wav. La primera tasa de muestreo encontrada se utiliza como objetivo para los stems siguientes. Si ya existen vocals.wav e instrumental.wav se evita repetir el modelo.
+
+La suma directa conserva el contenido instrumental, pero actualmente no normaliza picos ni registra si se produjo clipping. Esta condición deberá comprobarse porque un acompañamiento saturado afecta la experiencia y puede aumentar la filtración hacia el micrófono. También conviene registrar el modelo de Demucs empleado, ya que cambiarlo modifica la referencia.
+
+\subsection{Estimación y filtrado de frecuencia fundamental}
+
+pitch.py utiliza DIO y StoneMask cuando Pyworld está disponible [11]. Si la dependencia no existe, utiliza pYIN. El resultado pasa por FILTRO\_SUAVE, cuya configuración actual se resume en el Cuadro 4.2. Estos parámetros se diseñaron para reducir ruido y detecciones aisladas, pero aún no constituyen valores validados para todas las voces.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Configuración actual del filtrado de pitch. Fuente: elaboración propia.}
+\label{tab:4-2}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Parámetro & Valor actual & Efecto & Aspecto por validar \\
+\hline
+Rango & A1–C7 & Descarta frecuencias fuera del rango. & pYIN comienza en C2; debe unificarse. \\
+\hline
+Energía & máx(P25 RMS × 1,25; máximo RMS × 0,012) & Elimina bloques de baja energía. & Sensibilidad a canciones con dinámica desigual. \\
+\hline
+Huecos & Hasta 5 marcos & Interpola pérdidas breves. & Puede unir regiones que deberían permanecer separadas. \\
+\hline
+Duración mínima & 2 marcos & Elimina detecciones aisladas. & Depende del periodo de marco del estimador. \\
+\hline
+Mediana & 7 marcos & Obtiene una tendencia local robusta. & Retardo y pérdida de transiciones rápidas. \\
+\hline
+Salto máximo & 9 semitonos & Descarta candidatos alejados de la mediana. & Puede eliminar saltos melódicos reales. \\
+\hline
+\end{tabularx}
+\end{table}
+
+El RMS se calcula con ventanas de 2048 muestras y salto de 512. Los huecos breves se interpolan antes de eliminar segmentos cortos; luego la frecuencia se convierte a MIDI, se compara con una mediana móvil y se descartan saltos. El diagnóstico conserva simultáneamente la trayectoria cruda y filtrada para observar cuánto material se eliminó.
+
+\subsection{Captura, concurrencia y estado}
+
+karaoke.py utiliza sounddevice.playrec con reproducción no bloqueante y mantiene un bucle de supervisión cada 100 ms. app.py ejecuta este flujo en un hilo daemon y utiliza after para actualizar Tkinter desde el hilo principal. El mismo patrón se aplica a Demucs, reprocesamiento y diagnóstico, evitando que las operaciones largas congelen la ventana.
+
+Este diseño es suficiente para grabar y actualizar el cursor, pero playrec entrega la matriz completa como una operación que se consume al final. RF10 y RF11 requieren acceso progresivo a bloques. La extensión deberá utilizar InputStream o Stream con callback, una cola acotada y una política para descartar o agrupar bloques cuando el estimador no alcance el ritmo de captura.
+
+\subsection{Alineación y métricas}
+
+comparacion.py utiliza dtw-python sobre los arreglos de frecuencia. Después recorre index1 e index2, transforma cada par a cents y elimina errores iguales o superiores a 1000 cents en valor absoluto. metricas.py calcula error absoluto promedio, desviación, media firmada, tendencia y porcentajes dentro de 50 y 100 cents. La tendencia se considera estable cuando la media firmada se encuentra entre −10 y 10 cents.
+
+El diseño tiene tres limitaciones relevantes. Primero, el costo de DTW se calcula en Hz, por lo que una misma diferencia interválica tiene mayor costo en registros altos. Segundo, se pierde la trayectoria después de calcular las métricas, impidiendo relacionar errores con tiempos. Tercero, el límite de 1000 cents funciona como protección, pero todavía no está justificado experimentalmente. La siguiente versión deberá alinear una representación logarítmica, conservar pares temporales y clasificar correspondencias de baja confianza [16].
+
+\subsection{Visualización y persistencia}
+
+visualizacion.py convierte frecuencia a MIDI y corta las curvas cuando existen huecos superiores a 0,25 segundos. La referencia se muestra en una ventana móvil de 40 segundos y el cursor se mantiene aproximadamente a un cuarto del ancho. Después de la sesión se grafican las curvas Esperado y Obtenido.
+
+El JSON de resultado repite las curvas completas de referencia y usuario junto con las métricas. Esta decisión facilita reconstruir el gráfico, pero duplica información y puede aumentar el tamaño de cada sesión. Para el historial conviene separar la identidad de la referencia, los datos de pitch, la trayectoria de alineación y el resumen de métricas.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Evolución prevista de los contratos persistidos. Fuente: elaboración propia.}
+\label{tab:4-3}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Contrato & Campos actuales & Campos requeridos para la versión objetivo \\
+\hline
+metadata.json & id, título, artista, rutas, creada\_en y preparada. & reference\_id, modelo de separación y versión activa. \\
+\hline
+ref\_pitch.csv & tiempo, frecuencia y nota. & Mantener datos; asociar versión y configuración externa. \\
+\hline
+resultado.json & métricas y cuatro arreglos para el gráfico. & session\_id, reference\_id, analysis\_version, trayectoria y confianza. \\
+\hline
+Segmento & No implementado. & inicio, fin, categoría, severidad, confianza, evidencia y prioridad. \\
+\hline
+Retroalimentación & No implementada. & texto, segmentos utilizados, generador, versión y validación. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Evolución arquitectónica necesaria}
+
+\subsection{Canal de tiempo real}
+
+Se incorporará un componente independiente de captura continua. Su salida no será una nota directa, sino un bloque con muestras, tiempo inicial, tiempo final y estado. El estimador producirá frecuencia, confianza y sonoridad; un estabilizador decidirá la nota visible. La grabación completa deberá continuar en paralelo para que el análisis posterior no dependa de los valores simplificados mostrados durante el canto.
+
+\subsection{Trayectoria y segmentos}
+
+La comparación deberá producir una colección de pares alineados con tiempo de referencia, tiempo de usuario, diferencia en cents y confianza. Sobre esta serie se agruparán observaciones contiguas, permitiendo huecos breves controlados. La caracterización se basará en reglas explícitas antes de experimentar con modelos más complejos. Esta representación será la única entrada aceptada por el generador de retroalimentación.
+
+\subsection{Versionado para comparación histórica}
+
+Regenerar la referencia no deberá sobrescribir la identidad utilizada por sesiones anteriores. Cada preparación recibirá reference\_id y conservará modelo, fecha y configuración de pitch. Del mismo modo, cada resultado almacenará analysis\_version. Dos sesiones serán comparables cuando compartan canción y referencia, y cuando sus configuraciones sean equivalentes o exista un proceso explícito de recalcular ambas.
+
+\subsection{Adaptadores de retroalimentación y presentación}
+
+El generador de texto se definirá mediante una interfaz que reciba hallazgos estructurados y devuelva texto más un registro de validación. Una implementación por plantillas permitirá completar y probar el flujo sin LLM. Si se añade un modelo local o remoto, este no accederá directamente al audio ni decidirá los segmentos.
+
+La interfaz gráfica definitiva consumirá servicios de aplicación y objetos de resultado; no importará Demucs, Pyworld ni DTW directamente. Esta frontera hace viable reemplazar Tkinter sin diseñar todavía pantallas ni mockups y reduce el riesgo de que la migración visual altere cálculos ya validados.
+
+\section{Evidencia producida por el prototipo}
+
+El repositorio contiene canciones preparadas, stems, referencias y dos sesiones asociadas con una misma canción. Como ejemplo de ejecución, el archivo usuario\_20260604\_131542\_resultado.json registra 3077 pares comparados, error absoluto promedio de 66,94 cents, desviación de 109,00 cents, media firmada de 19,94 cents y 59,64 \% de pares dentro de 50 cents. Estos valores demuestran que el flujo produce y persiste resultados; no deben interpretarse como validación del estimador ni como diagnóstico de la persona que cantó.
+
+La separación entre evidencia de integración y evidencia de precisión es importante. Un JSON bien formado prueba que los módulos se conectaron, pero solo los experimentos del capítulo 3 podrán establecer si la referencia, alineación y métricas representan adecuadamente la interpretación.
+
+\section{Riesgos técnicos concretos}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Riesgos derivados de la implementación actual. Fuente: elaboración propia.}
+\label{tab:4-4}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+Riesgo & Origen en el diseño actual & Tratamiento previsto \\
+\hline
+Latencia acumulada & Estimador fuera de línea y mediana temporal. & Cola acotada, medición por bloque y configuración específica para tiempo real. \\
+\hline
+Referencia cambiante & ref\_pitch.csv se sobrescribe al reprocesar. & Versiones inmutables y relación explícita con sesiones. \\
+\hline
+DTW engañoso & Costo en Hz, sin restricciones ni confianza persistida. & Escala logarítmica, límites de deformación y revisión de anclas. \\
+\hline
+Resultados sobredimensionados & Curvas completas duplicadas en cada JSON. & Separar series, relaciones y resúmenes. \\
+\hline
+Fallo de dependencias & Demucs como subproceso y bibliotecas nativas. & Comprobación al iniciar, mensajes específicos y estrategia de instalación. \\
+\hline
+Texto no fundamentado & Un LLM puede agregar causas no observadas. & Entrada cerrada, validador, registro y fallback por plantillas. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\section{Síntesis del capítulo}
+
+La versión específica del desarrollo muestra que el prototipo ya conecta preparación, captura, pitch, DTW, métricas y persistencia, pero también identifica las modificaciones necesarias para sostener la contribución de la tesis. El trabajo pendiente no consiste únicamente en agregar pantallas: requiere captura continua, una representación alineada trazable, segmentos con evidencia, versionado de referencias y un generador textual subordinado al análisis.
+
+\chapter*{Referencias}
+\addcontentsline{toc}{chapter}{Referencias}
+
+\begin{enumerate}[label={[\arabic*]},leftmargin=*]
+
+\item P. Bottalico, S. Graetzer y E. J. Hunter, “Effect of Training and Level of External Auditory Feedback on the Singing Voice: Pitch Inaccuracy,” Journal of Voice, vol. 31, n.º 1, pp. 122.e9–122.e16, 2017. doi: 10.1016/j.jvoice.2016.01.012.
+
+\item W.-H. Tsai y H.-C. Lee, “Automatic Evaluation of Karaoke Singing Based on Pitch, Volume, and Rhythm Features,” IEEE Transactions on Audio, Speech, and Language Processing, vol. 20, n.º 4, pp. 1233–1243, 2012. doi: 10.1109/TASL.2011.2174224.
+
+\item T. Nakano, M. Goto y Y. Hiraga, “An Automatic Singing Skill Evaluation Method for Unknown Melodies Using Pitch Interval Accuracy and Vibrato Features,” en Proceedings of Interspeech 2006, 2006. doi: 10.21437/Interspeech.2006-474.
+
+\item D. M. Howard y G. F. Welch, “Visual Feedback Applied to the Learning of Conscious Pitch Control in Singing,” en Proceedings of Eurospeech 1989, pp. 2485–2488, 1989. doi: 10.21437/Eurospeech.1989-289.
+
+\item J. H. McDermott y A. J. Oxenham, “Music Perception, Pitch, and the Auditory System,” Current Opinion in Neurobiology, vol. 18, n.º 4, pp. 452–463, 2008. Versión de acceso abierto disponible en: https://pmc.ncbi.nlm.nih.gov/articles/PMC2629434/.
+
+\item S. Dalla Bella, J.-F. Giguère e I. Peretz, “Singing Proficiency in the General Population,” The Journal of the Acoustical Society of America, vol. 121, n.º 2, pp. 1182–1189, 2007. doi: 10.1121/1.2427111.
+
+\item S. W. Smith, The Scientist and Engineer's Guide to Digital Signal Processing. California Technical Publishing, 1997. Disponible en: https://www.dspguide.com/.
+
+\item J. O. Smith III, Spectral Audio Signal Processing. W3K Publishing, 2011. Disponible en: https://ccrma.stanford.edu/\textasciitilde{}jos/sasp/.
+
+\item librosa development team, “librosa.pyin: Fundamental Frequency Estimation Using Probabilistic YIN,” documentación oficial de librosa. Disponible en: https://librosa.org/doc/latest/generated/librosa.pyin.html.
+
+\item M. Morise, “Harvest: A High-Performance Fundamental Frequency Estimator from Speech Signals,” Proceedings of Interspeech 2017, pp. 2321–2325, 2017. Disponible en: https://www.isca-archive.org/interspeech\_2017/morise17b\_interspeech.pdf.
+
+\item M. Morise, F. Yokomori y K. Ozawa, “WORLD: A Vocoder-Based High-Quality Speech Synthesis System for Real-Time Applications,” IEICE Transactions on Information and Systems, vol. E99.D, n.º 7, pp. 1877–1884, 2016. Disponible en: https://www.jstage.jst.go.jp/article/transinf/E99.D/7/E99.D\_2015EDP7457/\_pdf.
+
+\item A. Défossez, N. Usunier, L. Bottou y F. Bach, “Music Source Separation in the Waveform Domain,” arXiv:1911.13254, 2019. Disponible en: https://arxiv.org/pdf/1911.13254.
+
+\item S. Rouard, F. Massa y A. Défossez, “Hybrid Transformers for Music Source Separation,” Proceedings of ICASSP 2023, pp. 1–5, 2023. Disponible en: https://arxiv.org/pdf/2211.08553.
+
+\item R. Hennequin, A. Khlif, F. Voituret y M. Moussallam, “Spleeter: A Fast and Efficient Music Source Separation Tool with Pre-Trained Models,” Journal of Open Source Software, vol. 5, n.º 50, p. 2154, 2020. Disponible en: https://joss.theoj.org/papers/10.21105/joss.02154.pdf.
+
+\item M. Müller, “Dynamic Time Warping,” Fundamentals of Music Processing: Audio, Analysis, Algorithms, Applications, recurso complementario en línea. Disponible en: https://www.audiolabs-erlangen.de/resources/MIR/FMP/C3/C3S2\_DTWbasic.html.
+
+\item librosa development team, “librosa.sequence.dtw: Dynamic Time Warping,” documentación oficial de librosa. Disponible en: https://librosa.org/doc/latest/generated/librosa.sequence.dtw.html.
+
+\item Y.-J. Luo, M.-T. Chen, T.-S. Chi y L. Su, “Singing Voice Correction Using Canonical Time Warping,” Proceedings of ICASSP 2018, pp. 156–160, 2018. Disponible en: https://arxiv.org/pdf/1711.08600.
+
+\item T. Nakano, M. Goto y Y. Hiraga, “An Automatic Singing Skill Evaluation Method for Unknown Melodies Using Pitch Interval Accuracy and Vibrato Features,” Proceedings of Interspeech 2006, 2006. Disponible en: https://www.isca-archive.org/interspeech\_2006/nakano06\_interspeech.pdf.
+
+\item T. Nakano, M. Goto y Y. Hiraga, “MiruSinger: A Singing Skill Visualization Interface Using Real-Time Feedback and Music CD Recordings as Referential Data,” Proceedings of the IEEE International Symposium on Multimedia Workshops, pp. 75–76, 2007. Disponible en: https://staff.aist.go.jp/m.goto/PAPER/ISM2007nakano.pdf.
+
+\item C. Truong, L. Oudre y N. Vayatis, “Selective Review of Offline Change Point Detection Methods,” Signal Processing, vol. 167, art. 107299, 2020. Disponible en: https://arxiv.org/pdf/1801.00718.
+
+\item A. Gatt y E. Krahmer, “Survey of the State of the Art in Natural Language Generation: Core Tasks, Applications and Evaluation,” Journal of Artificial Intelligence Research, vol. 61, pp. 65–170, 2018. Disponible en: https://www.jair.org/index.php/jair/article/download/11173/26378.
+
+\item Z. Ji et al., “Survey of Hallucination in Natural Language Generation,” ACM Computing Surveys, vol. 55, n.º 12, art. 248, 2023. Disponible en: https://arxiv.org/pdf/2202.03629.
+
+\item H. Touvron et al., “LLaMA: Open and Efficient Foundation Language Models,” arXiv:2302.13971, 2023. Disponible en: https://arxiv.org/pdf/2302.13971.
+
+\item G. Gerganov y colaboradores, “llama.cpp: LLM Inference in C/C++,” repositorio de software. Disponible en: https://github.com/ggml-org/llama.cpp.
+
+\item Python Software Foundation, “Python 3 Documentation.” Disponible en: https://docs.python.org/3/.
+
+\item Python Software Foundation, “tkinter — Python Interface to Tcl/Tk.” Disponible en: https://docs.python.org/3/library/tkinter.html.
+
+\item The Qt Company, “Qt for Python Documentation.” Disponible en: https://doc.qt.io/qtforpython-6/.
+
+\item SQLite Consortium, “About SQLite.” Disponible en: https://www.sqlite.org/about.html.
+
+\item PyInstaller Development Team, “PyInstaller Documentation.” Disponible en: https://pyinstaller.org/en/stable/.
+
+\item S. A. Asri, I. G. M. A. Sunaya, P. M. Prihatini y W. Setiawan, “Comparing Traditional and Agile Software Development Approaches: Case of Personal Extreme Programming,” Proceedings of ICST 2018, 2018. Disponible en: https://www.atlantis-press.com/article/55910901.pdf.
+
+\end{enumerate}
+
+\chapter*{Anexos}
+\addcontentsline{toc}{chapter}{Anexos}
+
+Los anexos de esta entrega se presentan como documentos complementarios al documento principal. Estos artefactos respaldan la especificación, planificación y modelado del sistema desarrollado durante el primer semestre.
+
+Anexo A: Especificación de requisitos. Archivo: Especificacion de Requisitos.docx.
+
+Anexo B: Historias de usuario. Archivo: Historias de Usuario.docx.
+
+Anexo C: Carta Gantt. Archivo: Carta Gantt.xlsx.
+
+Anexo D: Modelo de datos. Archivo: Modelo de datos.png.
+
+\end{document}
