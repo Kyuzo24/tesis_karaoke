@@ -43,3 +43,11 @@ Thumbs.db
 desktop.ini
 .DS_Store
 /.respaldo/
+
+# Historias grandes recompuestas desde partes verificadas
+/docs/contexto_codex/historial/019e8aa4-55db-7a22-841e-2c9a8d427c15.jsonl
+/docs/contexto_codex/historial/019eb3a5-07e3-7163-a098-145f9d55e5f3.jsonl
+/docs/contexto_codex/historial/01a08154-4c27-7551-9cfa-e8e7d2bcf73a.jsonl
+/docs/contexto_codex/historial/01a1570f-a3cd-7de3-9846-8bfc7596f2ee.jsonl
+/docs/contexto_codex/sesiones_disponibles/rollout-2026-10-19T23-06-45-01a1570f-a3cd-7de3-9846-8bfc7596f2ee.jsonl
+/docs/contexto_codex/sesiones_disponibles/rollout-2026-11-14T16-26-36-01a1db86-a51a-7763-8f16-5a729e09225d.jsonl

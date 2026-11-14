@@ -1,0 +1,5 @@
+# Mantener verificables los hashes de la exportacion entre equipos.
+docs/contexto_codex/**/*.jsonl -text
+docs/contexto_codex/**/*.md text eol=lf
+docs/contexto_codex/*.json text eol=lf
+docs/contexto_codex/partes/** -text

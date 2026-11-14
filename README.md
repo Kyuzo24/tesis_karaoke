@@ -9,9 +9,13 @@ Aplicación de escritorio para practicar canto, grabar interpretaciones y analiz
 3. Abre [el respaldo de traslado](https://github.com/Kyuzo24/tesis_karaoke/releases/tag/respaldo-2026-11-14) y descarga todos sus archivos.
 4. Extrae cada `proyecto-*.zip` en la raíz del código descargado. Cada ZIP es independiente; todos conservan las rutas originales. Esto restaura canciones, grabaciones, audios de entrada, datos de evaluación y resultados.
 5. Extrae `perfil-aplicacion.zip` en `%LOCALAPPDATA%\Karaoke Studio` para recuperar los datos de la versión instalada y las preferencias.
-6. Para usar la aplicación sin configurar Python, ejecuta `KaraokeStudio-1.0.2-Setup.exe`. Requiere Windows 10/11 de 64 bits. Si quieres usar las canciones y grabaciones del proyecto en la aplicación instalada, copia las carpetas `canciones` y `grabaciones` del proyecto a `%LOCALAPPDATA%\Karaoke Studio\Datos`, conservando las carpetas y archivos existentes.
+6. Para usar la aplicación sin configurar Python, ejecuta `KaraokeStudio-1.0.2-Setup.exe`. Requiere Windows 10/11 de 64 bits. Si quieres usar las canciones y grabaciones del proyecto en la aplicación instalada, copia las carpetas `canciones`, `grabaciones` y `output` del proyecto a `%LOCALAPPDATA%\Karaoke Studio\Datos`, conservando las carpetas y archivos existentes. Algunas canciones conservan rutas hacia `output/htdemucs`.
 
 El archivo `manifest-respaldo.json` registra tamaños y hashes SHA-256 de los archivos originales y de los ZIP. Conserva una copia de las descargas fuera del equipo antiguo antes de borrarlo o reinstalarlo.
+
+## Continuar los chats de Codex
+
+Lee [CONTEXTO_PARA_CODEX.md](CONTEXTO_PARA_CODEX.md) y [las instrucciones del historial](docs/contexto_codex/LEEME.md). Se exportaron los ocho chats de este proyecto, con transcripciones legibles y registros disponibles. Abre el repositorio en Codex en el nuevo PC y pide que los consulte para retomar el trabajo. Esta exportación no garantiza que aparezcan automáticamente los chats originales en la barra lateral.
 
 ## Trabajar en el código
 
