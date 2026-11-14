@@ -105,38 +105,38 @@
     },
     {
       "path": "historial/019e8aa4-55db-7a22-841e-2c9a8d427c15.md",
-      "size": 234041,
-      "sha256": "a638a49be371fdf7664da7e4dd2c34f1acc44fe49694f4343d7bd294e3c9ff93"
+      "size": 229268,
+      "sha256": "c6007860edd916674a18172f2fb90a82ed21c6b3db15743912746d535bf55e59"
     },
     {
       "path": "historial/019e8ab7-78eb-74a3-a286-089af76f4551.jsonl",
-      "size": 5285,
-      "sha256": "db014011796d207edb9e407c45f6c4d4520a163354142b6aa3a19d1fd79c55a1"
+      "size": 5276,
+      "sha256": "b2300f98c82379163cbc27807d3e5c7e89d487e9190488fef9012aafabd784fc"
     },
     {
       "path": "historial/019e8ab7-78eb-74a3-a286-089af76f4551.md",
-      "size": 1120,
-      "sha256": "6cceb7680729a2e23587dd03b7abbbce3302bf55fbdf3a74e8cfb42b8530256c"
+      "size": 1095,
+      "sha256": "a5f49071b4fdc694ffadf2ce57edb82a55f7b5d6a98e80ca7bf2b862ef555878"
     },
     {
       "path": "historial/019e8ab9-7887-73b3-9d26-a21fc2a455d6.jsonl",
-      "size": 1268,
-      "sha256": "c7469a0f433b9df8f65b42fe1416bf84545b15cfb6cc533a029d771b79deafe9"
+      "size": 1265,
+      "sha256": "21bf601f24b7871d261846b114db5cfa03d1e160b40db32d26824349494659c5"
     },
     {
       "path": "historial/019e8ab9-7887-73b3-9d26-a21fc2a455d6.md",
-      "size": 240,
-      "sha256": "30017d62f73ec721d001f226349d8d0a9537332f26bfa24138b0c3367ea6cadf"
+      "size": 230,
+      "sha256": "49407e8a7ac4b4a2cf25245eb1779947794f6838a38817752844f22b040140ce"
     },
     {
       "path": "historial/019e932f-de5f-7b72-bf7a-cf2c55f2673d.jsonl",
-      "size": 25706,
-      "sha256": "699836b81b482d33c7a973ea8f60e7f98acd645de472490cd3041ccaed0f976d"
+      "size": 25695,
+      "sha256": "f58c0f730dcbc835cf762f38c567229fbad8af12df03a528757dabca76318ec5"
     },
     {
       "path": "historial/019e932f-de5f-7b72-bf7a-cf2c55f2673d.md",
-      "size": 2661,
-      "sha256": "b3ecf7987bc199200f5afe1938b1c87acc85339acf9c989a65f6f66682fbc43a"
+      "size": 2619,
+      "sha256": "d4b28a0d53647639063eebacd45e2a7e8820557d89df2d7b234dae05bdbc6975"
     },
     {
       "path": "historial/019eb3a5-07e3-7163-a098-145f9d55e5f3.jsonl",
@@ -227,8 +227,8 @@
     },
     {
       "path": "historial/019eb3a5-07e3-7163-a098-145f9d55e5f3.md",
-      "size": 370287,
-      "sha256": "9f4bca12222f577b7fda4c54a0132edf97ed317a1b3180971cac8cc974625d9b"
+      "size": 363075,
+      "sha256": "fcf3e0d63d190dbf8f3d3fc0374df6754271210cc6afcb109782456077081dc5"
     },
     {
       "path": "historial/01a08154-4c27-7551-9cfa-e8e7d2bcf73a.jsonl",
@@ -279,8 +279,8 @@
     },
     {
       "path": "historial/01a08154-4c27-7551-9cfa-e8e7d2bcf73a.md",
-      "size": 187763,
-      "sha256": "91ae0ebabb682e93671b7f3d4502d93abf1129467695fcb59d97ca28ab20ef6d"
+      "size": 184462,
+      "sha256": "c15255e53119ed336ea91694ef9f65a5bfdc8c181275504d5d2e8c59ad63d882"
     },
     {
       "path": "historial/01a1570f-a3cd-7de3-9846-8bfc7596f2ee.jsonl",
@@ -311,18 +311,18 @@
     },
     {
       "path": "historial/01a1570f-a3cd-7de3-9846-8bfc7596f2ee.md",
-      "size": 118749,
-      "sha256": "62fd14eaad2eae185ecc623d2a9d649648fa60ce26291b87bcbedc8d6319c99c"
+      "size": 116268,
+      "sha256": "89f5fac682fd63e99d8a5c49e5a126432f1cc7d75956f4b3a055a3240a7aad3a"
     },
     {
       "path": "historial/01a1db86-a51a-7763-8f16-5a729e09225d.jsonl",
-      "size": 429255,
-      "sha256": "5dc5b508ddfd26d82d2d09d9084d5542adf851d94de9126c88766831823036ea"
+      "size": 429150,
+      "sha256": "a74baaedfb1d2baa291e0470e708a102f3b396383be1f7ac24869a7f5111bc81"
     },
     {
       "path": "historial/01a1db86-a51a-7763-8f16-5a729e09225d.md",
-      "size": 4261,
-      "sha256": "faae9d61836208e6559780ee9f5f710e77b3c28676591bb335082345a7785117"
+      "size": 4182,
+      "sha256": "e694c9ba3c58072f8f9138a61256e912f8ee056cea0001d7b0a6abb07c8e0afb"
     },
     {
       "path": "sesiones_disponibles/rollout-2026-10-19T23-06-45-01a1570f-a3cd-7de3-9846-8bfc7596f2ee.jsonl",
@@ -434,5 +434,6 @@
     "Seis hilos antiguos conservan historial en la base de datos, pero ya no tienen archivo rollout JSONL original en disco.",
     "No se exportan credenciales, configuracion global ni chats ajenos al proyecto.",
     "Este formato de respaldo no equivale a una importacion nativa comprobada en otra instalacion."
-  ]
+  ],
+  "text_storage": "Los archivos pequenos se verifican con los saltos de linea conservados en Git; los archivos grandes se reconstruyen byte a byte desde partes binarias."
 }

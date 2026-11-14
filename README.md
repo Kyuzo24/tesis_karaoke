@@ -4,6 +4,8 @@ Aplicación de escritorio para practicar canto, grabar interpretaciones y analiz
 
 ## Recuperar el trabajo en otro PC
 
+**Estado del traslado:** el código y la documentación están en GitHub. Los ZIP de canciones, grabaciones, datasets y resultados se prepararon y verificaron localmente, pero su publicación en Releases falló por tiempos de espera de la conexión. Hasta confirmar esa publicación, el repositorio por sí solo no contiene esos datos. La copia local está en `.respaldo` en el PC de origen; conserva esa carpeta o cópiala a una unidad externa.
+
 1. Inicia sesión en GitHub con la cuenta propietaria de este repositorio privado.
 2. Descarga el código con **Code → Download ZIP**, o clona el repositorio con Git.
 3. Abre [el respaldo de traslado](https://github.com/Kyuzo24/tesis_karaoke/releases/tag/respaldo-2026-11-14) y descarga todos sus archivos.
